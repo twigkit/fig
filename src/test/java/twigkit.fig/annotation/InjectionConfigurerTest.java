@@ -20,7 +20,7 @@ public class InjectionConfigurerTest {
             @Override
             public void validate() {
                 assertNotNull(config);
-                assertEquals(this.config, config);
+                assertEquals(config, this.config);
                 assertNotNull(el);
                 assertEquals("Krypton", el);
 

@@ -63,8 +63,8 @@ public class Configs {
         }
     }
 
-    public static InterfaceConfigurer with(Config config) {
-        return new InterfaceConfigurer(config);
+    public static GenericConfigurer with(Config config) {
+        return new GenericConfigurer(config);
     }
 
     private class ConfigFinder implements ConfigVisitor {
