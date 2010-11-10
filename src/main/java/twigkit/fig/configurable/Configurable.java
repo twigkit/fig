@@ -1,4 +1,6 @@
-package twigkit.fig;
+package twigkit.fig.configurable;
+
+import twigkit.fig.Config;
 
 /**
  * @author mr.olafsson

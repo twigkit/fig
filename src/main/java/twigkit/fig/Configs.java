@@ -1,5 +1,6 @@
 package twigkit.fig;
 
+import twigkit.fig.configurable.InterfaceConfigurer;
 import twigkit.fig.visitor.ConfigVisitor;
 
 import java.util.LinkedHashMap;
@@ -62,8 +63,8 @@ public class Configs {
         }
     }
 
-    public static Configurer with(Config config) {
-        return new Configurer(config);
+    public static InterfaceConfigurer with(Config config) {
+        return new InterfaceConfigurer(config);
     }
 
     private class ConfigFinder implements ConfigVisitor {

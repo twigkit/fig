@@ -1,7 +1,8 @@
-package twigkit.fig;
+package twigkit.fig.configurable;
 
 import org.junit.Test;
-import twigkit.fig.acme.Sample;
+import twigkit.fig.Config;
+import twigkit.fig.sample.Sample;
 
 import static org.junit.Assert.*;
 import static twigkit.fig.Configs.*;
@@ -9,7 +10,7 @@ import static twigkit.fig.Configs.*;
 /**
  * @author mr.olafsson
  */
-public class ConfigurableTest {
+public class InterfaceConfigurerTest {
 
     @Test
     public void testConfigurable() {

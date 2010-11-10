@@ -1,7 +1,7 @@
-package twigkit.fig.acme;
+package twigkit.fig.sample;
 
 import twigkit.fig.Config;
-import twigkit.fig.Configurable;
+import twigkit.fig.configurable.Configurable;
 
 /**
  * @author mr.olafsson
