@@ -42,20 +42,20 @@ public class ConfigurationTest {
     private void walk(int level, Configuration config) {
         String indent = "";
         for (int i = 0; i < level; i++) {
-            indent += "     ";
+            indent += "      ";
         }
 
         if (level == 0) {
-            System.out.println(indent + (level > 0 ? " +-- " : "") + config.name().toUpperCase());
+            System.out.println(indent + (level > 0 ? "  +-- " : "") + config.name().toUpperCase());
         }
 
         for (Value v : config.values().values()) {
-            System.out.println(indent + " |-- " + v.name() + " = " + v.get());
+            System.out.println(indent + "  ¦-- " + v.name() + " = " + v.get());
         }
 
         for (Configuration c : config.subsets()) {
-            System.out.println(indent + " |");
-            System.out.println(indent + " +-- " + c.name().toUpperCase());
+            System.out.println(indent + "  ¦");
+            System.out.println(indent + "  +-- " + c.name().toUpperCase());
             walk(level + 1, c);
         }
     }
