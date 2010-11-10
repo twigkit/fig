@@ -1,14 +1,17 @@
 package twigkit.fig.sample;
 
+import twigkit.fig.Config;
 import twigkit.fig.annotation.Configure;
 
 /**
  * @author mr.olafsson
  */
-@Configure( with = "elements" )
 public abstract class InjectedSample {
 
     private String dummy;
+
+    @Configure
+    protected Config config;
     
     @Configure.Value( name = "element" )
     protected String el;

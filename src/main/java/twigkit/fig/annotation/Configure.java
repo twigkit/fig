@@ -8,10 +8,11 @@ import java.lang.annotation.Target;
 /**
  * @author mr.olafsson
  */
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
 public @interface Configure {
 
-    String with();
+    String with() default "";
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.FIELD})

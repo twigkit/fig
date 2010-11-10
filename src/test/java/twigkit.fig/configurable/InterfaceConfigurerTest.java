@@ -5,7 +5,6 @@ import twigkit.fig.Config;
 import twigkit.fig.sample.Sample;
 
 import static org.junit.Assert.*;
-import static twigkit.fig.Configs.*;
 
 /**
  * @author mr.olafsson
@@ -32,7 +31,7 @@ public class InterfaceConfigurerTest {
 
         Config config = new Config("sample").set("element", "Krypton").set("symbol", "kr");
 
-        with(config).configure(sample1).configure(sample2);
+        new InterfaceConfigurer(config).configure(sample1).configure(sample2);
 
         sample1.validate();
         sample2.validate();

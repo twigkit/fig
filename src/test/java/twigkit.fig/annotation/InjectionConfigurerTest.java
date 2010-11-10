@@ -14,9 +14,13 @@ public class InjectionConfigurerTest {
 
     @Test
     public void testAnnotation() {
+        final Config config = new Config("sample").set("element", "Krypton").set("symbol", "kr");
+
         InjectedSample sample = new InjectedSample() {
             @Override
             public void validate() {
+                assertNotNull(config);
+                assertEquals(this.config, config);
                 assertNotNull(el);
                 assertEquals("Krypton", el);
 
@@ -25,10 +29,7 @@ public class InjectionConfigurerTest {
             }
         };
 
-        Config config = new Config("sample").set("element", "Krypton").set("symbol", "kr");
-        InjectionConfigurer configurer = new InjectionConfigurer(config);
-
-        configurer.configure(sample);
+        new InjectionConfigurer(config).configure(sample);
 
         sample.validate();
     }

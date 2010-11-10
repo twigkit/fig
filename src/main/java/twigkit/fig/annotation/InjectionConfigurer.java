@@ -25,15 +25,25 @@ public class InjectionConfigurer {
         Field[] fields = ReflectionUtils.getDeclaredAndInheritedFields(target.getClass(), false);
 
         for (Field field : fields) {
-            if (field.isAnnotationPresent(Configure.Value.class)) {
+            if (field.isAnnotationPresent(Configure.class)) {
+                Configure annotation = field.getAnnotation(Configure.class);
+                
+                field.setAccessible(true);
+                try {
+                    field.set(target, config);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            } else if (field.isAnnotationPresent(Configure.Value.class)) {
                 Configure.Value annotation = field.getAnnotation(Configure.Value.class);
+                
                 String name = annotation.name();
                 if (name == null || name.equals("")) {
                     name = field.getName();
                 }
 
+                field.setAccessible(true);
                 try {
-                    field.setAccessible(true);
                     field.set(target, config.value(name).get());
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
