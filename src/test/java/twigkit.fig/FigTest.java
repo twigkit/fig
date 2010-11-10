@@ -1,7 +1,7 @@
 package twigkit.fig;
 
 import org.junit.Test;
-import twigkit.fig.PropertiesLoader;
+import twigkit.fig.visitor.ConfigTreeWriter;
 
 /**
  * @author mr.olafsson
@@ -9,7 +9,12 @@ import twigkit.fig.PropertiesLoader;
 public class FigTest {
 
     @Test
-    public void testFig() {
-        PropertiesLoader t = new PropertiesLoader();
+    public void testLoadProperties() {
+        Fig fig = new Fig();
+        PropertiesLoader loader = new PropertiesLoader(fig);
+
+        for (Config config : fig.configs().values()) {
+            new ConfigTreeWriter(config);
+        }
     }
 }

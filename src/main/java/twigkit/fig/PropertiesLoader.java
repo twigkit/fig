@@ -12,11 +12,7 @@ import java.util.*;
  */
 public class PropertiesLoader {
 
-    private Configurations configs;
-
-    public PropertiesLoader() {
-        configs = new Configurations();
-        
+    public PropertiesLoader(Fig fig) {
         try {
             File f = new File(this.getClass().getClassLoader().getResource("confs").toURI());
 
@@ -37,30 +33,20 @@ public class PropertiesLoader {
                 Properties p = new Properties();
                 try {
                     p.load(new FileInputStream(file));
-                    Configuration config = new Configuration(file.getName().substring(0, file.getName().lastIndexOf(".")));
+                    String[] path = file.getName().substring(0, file.getName().lastIndexOf(".")).split("_");
+
+                    Config config = new Config(path[path.length - 1]);
                     for (Map.Entry prop : p.entrySet()) {
-                        config.values().put(prop.getKey().toString(), new Value<Object>(prop.getKey().toString(), prop.getValue(), false));
+                        config.set(new Value<Object>(prop.getKey().toString(), prop.getValue(), false));
                     }
-                    configs.add(config);
+
+                    fig.add(path, config);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
-            for (Configuration config : configs.values()) {
-                System.out.println(config.name());
-                for (Value value : config.values().values()) {
-                    System.out.println("> " + value.name() + " : " + value.get());
-                }
-            }
-
-
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-    }
-
-    public static PropertiesLoader get() {
-        return new PropertiesLoader();
     }
 }
