@@ -1,5 +1,7 @@
 package twigkit.fig;
 
+import twigkit.fig.visitor.ConfigVisitor;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,6 +18,28 @@ public class Fig {
 
     public Map<String, Config> configs() {
         return configs;
+    }
+
+    public Config config(String name) {
+        return configs.get(name);
+    }
+
+    public Config find(String name) {
+        Config config = null;
+        if (configs.containsKey(name)) {
+            config = configs.get(name);
+        } else {
+            ConfigFinder finder = new ConfigFinder(name);
+            for (Config c : configs().values()) {
+                c.accept(finder);
+                if (finder.getConfig() != null) {
+                    config = finder.getConfig();
+                    break;
+                }
+            }
+        }
+
+        return config;
     }
 
     public void add(String[] path, Config config) {
@@ -35,6 +59,31 @@ public class Fig {
                 }
                 parent.extendWith(config);
             }
+        }
+    }
+
+    private class ConfigFinder implements ConfigVisitor {
+
+        private String name;
+        private Config config;
+
+        private ConfigFinder(String name) {
+            this.name = name;
+        }
+
+        public void visit(Config config) {
+            System.out.println(">> " + config.name());
+            if (config.name().equals(name)) {
+                this.config = config;
+            }
+        }
+
+        public void value(Value value) {}
+
+        public void extension(Config extension) {}
+
+        public Config getConfig() {
+            return config;
         }
     }
 }
