@@ -22,11 +22,11 @@ public class ConfigTreeWriter implements ConfigVisitor {
     }
 
     public void value(Value value) {
-        System.out.println( pad() + "  ¦-- " + value.name() + " = " + value.get() );
+        System.out.println( pad() + "  |-- " + value.name() + " = " + value.get() );
     }
 
     public void extension(Config extension) {
-        System.out.println( pad(extension.parents().size() - 1) + "  ¦" );
+        System.out.println( pad(extension.parents().size() - 1) + "  |" );
         System.out.println( pad(extension.parents().size() - 1) + "  +-- " + extension.name().toUpperCase() );
     }
 
