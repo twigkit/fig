@@ -1,4 +1,8 @@
-package twigkit.fig;
+package twigkit.fig.loader;
+
+import twigkit.fig.Config;
+import twigkit.fig.Configs;
+import twigkit.fig.Value;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +16,7 @@ import java.util.*;
  */
 public class PropertiesLoader {
 
-    public PropertiesLoader(Fig fig) {
+    public PropertiesLoader(Configs fig) {
         try {
             File f = new File(this.getClass().getClassLoader().getResource("confs").toURI());
 

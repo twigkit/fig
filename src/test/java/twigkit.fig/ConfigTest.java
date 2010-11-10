@@ -2,7 +2,6 @@ package twigkit.fig;
 
 import org.junit.Assert;
 import org.junit.Test;
-import twigkit.fig.visitor.ConfigTreeWriter;
 
 /**
  * @author mr.olafsson

@@ -8,11 +8,11 @@ import java.util.Map;
 /**
  * @author mr.olafsson
  */
-public class Fig {
+public class Configs {
 
     private Map<String, Config> configs;
 
-    public Fig() {
+    public Configs() {
         configs = new LinkedHashMap<String, Config>();
     }
 
@@ -20,7 +20,7 @@ public class Fig {
         return configs;
     }
 
-    public Config config(String name) {
+    public Config get(String name) {
         return configs.get(name);
     }
 
@@ -62,6 +62,10 @@ public class Fig {
         }
     }
 
+    public static Configurer with(Config config) {
+        return new Configurer(config);
+    }
+
     private class ConfigFinder implements ConfigVisitor {
 
         private String name;
@@ -72,15 +76,16 @@ public class Fig {
         }
 
         public void visit(Config config) {
-            System.out.println(">> " + config.name());
             if (config.name().equals(name)) {
                 this.config = config;
             }
         }
 
-        public void value(Value value) {}
+        public void value(Value value) {
+        }
 
-        public void extension(Config extension) {}
+        public void extension(Config extension) {
+        }
 
         public Config getConfig() {
             return config;
