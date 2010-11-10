@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class PropertiesLoader {
 
-    public PropertiesLoader(Configs fig) {
+    public PropertiesLoader(Configs configs) {
         try {
             File f = new File(this.getClass().getClassLoader().getResource("confs").toURI());
 
@@ -44,7 +44,7 @@ public class PropertiesLoader {
                         config.set(new Value<Object>(prop.getKey().toString(), prop.getValue(), false));
                     }
 
-                    fig.add(path, config);
+                    configs.add(path, config);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
