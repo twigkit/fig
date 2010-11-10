@@ -27,4 +27,17 @@ public class ValueTest {
         value.require();
         Assert.assertTrue(value.required());
     }
+
+    @Test
+    public void testEquality() {
+        Value v1 = new Value().name("attr1").set("myValue");
+        Value v2 = new Value().name("attr1").set("myValue");
+        Value v3 = new Value().name("attr1").set("different");
+
+        Assert.assertEquals(v1, v2);
+        Assert.assertFalse(v1.equals(v3));
+
+        Assert.assertEquals(v1.hashCode(), v2.hashCode());
+        Assert.assertFalse(v1.hashCode() == v3.hashCode());
+    }
 }
