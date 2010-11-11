@@ -45,6 +45,11 @@ public class Fig {
         return new Fig(loader);
     }
 
+    /**
+     * List of all top level {@link Config}s.
+     * 
+     * @return
+     */
     public Collection<Config> configs() {
         return configs.values();
     }
@@ -55,8 +60,17 @@ public class Fig {
      * @param name
      * @return
      */
-    public Config get(String name) {
-        return configs.get(name);
+    public Config get(String... name) {
+        Config c = configs.get(name[0]);
+
+        if (name.length == 1) {
+            return c;
+        } else {
+            for (int i = 1; i < name.length; i++) {
+                c = c.extension(name[i]);
+            }
+            return c;
+        }
     }
 
     /**
@@ -83,6 +97,12 @@ public class Fig {
         return config;
     }
 
+    /**
+     * Add a {@link Config}.
+     * 
+     * @param config
+     * @return
+     */
     public Fig add(Config config) {
         return add(config, config.name());
     }

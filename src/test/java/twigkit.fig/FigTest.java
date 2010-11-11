@@ -25,6 +25,22 @@ public class FigTest {
     }
 
     @Test
+    public void testGetConfig() {
+        Fig fig = Fig.load(new PropertiesLoader("confs"), new PropertiesLoader("elements"));
+
+        Config config = fig.get("does-not-exist");
+        Assert.assertNull(config);
+
+        config = fig.get("root");
+        Assert.assertNotNull(config);
+        Assert.assertEquals("root", config.name());
+
+        config = fig.get("root", "extension-1", "extension-1-1");
+        Assert.assertNotNull(config);
+        Assert.assertEquals("extension-1-1", config.name());
+    }
+
+    @Test
     public void testFindConfig() {
         Fig fig = Fig.load(new PropertiesLoader("confs"), new PropertiesLoader("elements"));
 
