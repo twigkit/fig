@@ -18,9 +18,9 @@ Add the fig-*{version}*.jar to your project's classpath. If you use [Maven][Mave
 Usage
 -----
 
-Load from Java Properties files:
+Load configurations from Java Properties files:
 
-    /conf/
+    conf/
         servers.conf
          host = 127.0.0.1
          port = 8080
@@ -36,7 +36,7 @@ Load from Java Properties files:
     Configs.load(new PropertiesLoader("confs"));
     Config config = Configs.get("servers");
 
-Create configurations programmatically:
+...or create configurations programmatically:
 
     Config servers = new Config("servers").set("host", "127.0.0.1").set("port", 8080);
 
