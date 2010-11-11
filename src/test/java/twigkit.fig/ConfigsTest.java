@@ -21,6 +21,16 @@ public class ConfigsTest {
     }
 
     @Test
+    public void testLoadElements() {
+        Configs fig = new Configs();
+        PropertiesLoader loader = new PropertiesLoader(fig, "elements");
+
+        for (Config config : fig.configs().values()) {
+            new ConfigTreeWriter(config);
+        }
+    }
+
+    @Test
     public void testFindConfig() {
         Configs fig = new Configs();
         PropertiesLoader loader = new PropertiesLoader(fig, "confs");
