@@ -14,9 +14,15 @@ import java.util.*;
 /**
  * @author mr.olafsson
  */
-public class PropertiesLoader {
+public class PropertiesLoader implements Loader {
 
-    public PropertiesLoader(Configs configs, String path) {
+    private String path;
+
+    public PropertiesLoader(String path) {
+        this.path = path;
+    }
+
+    public void load(Configs configs) {
         try {
             File f = new File(this.getClass().getClassLoader().getResource(path).toURI());
 

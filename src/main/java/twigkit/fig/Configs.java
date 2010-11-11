@@ -1,6 +1,8 @@
 package twigkit.fig;
 
 import twigkit.fig.configurable.InterfaceConfigurer;
+import twigkit.fig.loader.Loader;
+import twigkit.fig.loader.PropertiesLoader;
 import twigkit.fig.visitor.ConfigVisitor;
 
 import java.util.LinkedHashMap;
@@ -15,6 +17,17 @@ public class Configs {
 
     public Configs() {
         configs = new LinkedHashMap<String, Config>();
+    }
+
+    public Configs(Loader... loader) {
+        this();
+        for (Loader l : loader) {
+            l.load(this);
+        }
+    }
+
+    public static Configs load(Loader... loader) {
+        return new Configs(loader);
     }
 
     public Map<String, Config> configs() {
