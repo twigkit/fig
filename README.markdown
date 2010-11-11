@@ -33,8 +33,28 @@ Get values:
 
 Extend configuration sets with specifics (inheriting and overriding values):
 
-    config.subset(new Config("email-server").set("port", "25"));
+    config.subset(new Config("email-server").set("port", "25").set("protocol", "imap"));
     Config emailServer = config.subset("email-server");
+
+    emailServer.subset(new Config("secure-email").set("port", 465").set("security", "ssh"));
+
+This would create configuration sets like:
+
+    SERVER-SETTINGS
+      |-- host = 127.0.0.1
+      |-- port = 8080
+      |
+      +-- EMAIL-SERVER
+            |-- host = 127.0.0.1
+            |-- port = 25
+            |-- protocol = imap
+            |
+            +-- SECURE-EMAIL
+                  |-- host = 127.0.0.1
+                  |-- port = 465
+                  |-- protocol = imap
+                  |-- security = ssl
+
 
 [TwigKit]: http://www.twigkit.com/
 [Maven]: http://maven.apache.org/
