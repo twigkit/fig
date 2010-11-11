@@ -46,7 +46,7 @@ public class GenericConfigurerTest {
             }
         };
 
-        Configs.with(config).configure(sample2);
+        Fig.with(config).configure(sample2);
 
         sample2.validate();
     }

@@ -1,7 +1,7 @@
 package twigkit.fig.loader;
 
 import twigkit.fig.Config;
-import twigkit.fig.Configs;
+import twigkit.fig.Fig;
 import twigkit.fig.Value;
 
 import java.io.File;
@@ -22,7 +22,7 @@ public class PropertiesLoader implements Loader {
         this.path = path;
     }
 
-    public void load(Configs configs) {
+    public void load(Fig configs) {
         try {
             File f = new File(this.getClass().getClassLoader().getResource(path).toURI());
 
@@ -52,7 +52,7 @@ public class PropertiesLoader implements Loader {
                         config.set(new Value<Object>(new String(key.getBytes("ISO-8859-1"), "UTF-8"), new String(p.getString(key).getBytes("ISO-8859-1"), "UTF-8"), false));
                     }
 
-                    configs.add(levels, config);
+                    configs.add(config, levels);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

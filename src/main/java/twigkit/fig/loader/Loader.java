@@ -1,12 +1,12 @@
 package twigkit.fig.loader;
 
-import twigkit.fig.Configs;
+import twigkit.fig.Fig;
 
 /**
  * @author mr.olafsson
  */
 public interface Loader {
 
-    public void load(Configs configs);
+    public void load(Fig configs);
 
 }

@@ -15,9 +15,11 @@ public abstract class InjectedSample {
     
     @Configure.Value( name = "element" )
     protected String el;
+
     @Configure.Value
     protected String symbol;
 
     public abstract void validate();
+
 
 }

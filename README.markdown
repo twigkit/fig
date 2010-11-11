@@ -20,8 +20,7 @@ Usage
 
 Given the following Java Properties files:
 
-<pre>
-    conf/
+    confs/
         servers.conf
          host = 127.0.0.1
          port = 8080
@@ -33,7 +32,6 @@ Given the following Java Properties files:
         servers_email_secure-mail.conf
          port = 465
          security = ssl
-</pre>
 
 Load configurations using:
 
