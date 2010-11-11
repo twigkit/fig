@@ -34,14 +34,16 @@ public class PropertiesLoader {
             });
 
             for (File file : files) {
-                Properties p = new Properties();
                 try {
-                    p.load(new FileInputStream(file));
+                    ResourceBundle p = new PropertyResourceBundle(new FileInputStream(file));
                     String[] levels = file.getName().substring(0, file.getName().lastIndexOf(".")).split("_");
 
                     Config config = new Config(levels[levels.length - 1]);
-                    for (Map.Entry prop : p.entrySet()) {
-                        config.set(new Value<Object>(prop.getKey().toString(), prop.getValue(), false));
+
+                    Enumeration<String> keys = p.getKeys();
+                    while (keys.hasMoreElements()) {
+                        String key = keys.nextElement();
+                        config.set(new Value<Object>(new String(key.getBytes("ISO-8859-1"), "UTF-8"), new String(p.getString(key).getBytes("ISO-8859-1"), "UTF-8"), false));
                     }
 
                     configs.add(levels, config);
