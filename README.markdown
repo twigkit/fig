@@ -22,16 +22,13 @@ Load from Java Properties files
 
     Configs.load(new PropertiesLoader("confs"));
 
-
 Create configurations programmatically
 
-    new Config("conf").set("host", "127.0.0.1").set("port", 8080);
-
+    Config config = new Config("conf").set("host", "127.0.0.1").set("port", 8080);
 
 Get values
 
-    config.get("host");
-
+    config.value("host").get();
 
 [TwigKit]: http://www.twigkit.com/
 [Maven]: http://maven.apache.org/
