@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * @author mr.olafsson
  */
-public class InterfaceConfigurerTest {
+public class InterfaceConfiguratorTest {
 
     @Test
     public void testConfigurable() {
@@ -18,12 +18,7 @@ public class InterfaceConfigurerTest {
             public void validate() {
                 assertNotNull(config.value("element"));
                 assertEquals("Krypton", config.value("element").get());
-            }
-        };
 
-        Sample sample2 = new Sample() {
-            @Override
-            public void validate() {
                 assertNotNull(config.value("symbol"));
                 assertEquals("kr", config.value("symbol").get());
             }
@@ -31,9 +26,8 @@ public class InterfaceConfigurerTest {
 
         Config config = new Config("sample").set("element", "Krypton").set("symbol", "kr");
 
-        new InterfaceConfigurer(config).configure(sample1).configure(sample2);
+        new InterfaceConfigurator(config).configure(sample1);
 
         sample1.validate();
-        sample2.validate();
     }
 }

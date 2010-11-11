@@ -2,7 +2,6 @@ package twigkit.fig;
 
 import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigFinder;
-import twigkit.fig.visitor.ConfigVisitor;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -153,7 +152,7 @@ public class Fig {
      * @param name
      * @return
      */
-    public GenericConfigurer with(String... name) {
+    public GenericConfigurator with(String... name) {
         return with(get(name));
     }
 
@@ -164,7 +163,7 @@ public class Fig {
      * @param config
      * @return
      */
-    public static GenericConfigurer with(Config config) {
-        return new GenericConfigurer(config);
+    public static GenericConfigurator with(Config config) {
+        return new GenericConfigurator(config);
     }
 }

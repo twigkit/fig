@@ -1,6 +1,7 @@
 package twigkit.fig.annotation;
 
 import twigkit.fig.Config;
+import twigkit.fig.Configurator;
 import twigkit.fig.Value;
 import twigkit.fig.util.ReflectionUtils;
 
@@ -9,17 +10,18 @@ import java.lang.reflect.Field;
 /**
  * @author mr.olafsson
  */
-public class InjectionConfigurer {
+public class InjectionConfigurator implements Configurator<Object> {
 
     private Config config;
 
-    public InjectionConfigurer(Config config) {
+    public InjectionConfigurator(Config config) {
         this.config = config;
     }
 
-    public InjectionConfigurer configure(Object target) {
+    public Object configure(Object target) {
         inject(target);
-        return this;
+        
+        return target;
     }
 
     private void inject(Object target) {

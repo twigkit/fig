@@ -2,7 +2,6 @@ package twigkit.fig;
 
 import org.junit.Assert;
 import org.junit.Test;
-import twigkit.fig.annotation.InjectionConfigurer;
 import twigkit.fig.loader.PropertiesLoader;
 import twigkit.fig.sample.InjectedSample;
 import twigkit.fig.visitor.ConfigTreeWriter;

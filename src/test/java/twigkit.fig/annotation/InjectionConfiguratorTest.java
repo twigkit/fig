@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author mr.olafsson
  */
-public class InjectionConfigurerTest {
+public class InjectionConfiguratorTest {
 
     @Test
     public void testAnnotation() {
@@ -29,7 +29,7 @@ public class InjectionConfigurerTest {
             }
         };
 
-        new InjectionConfigurer(config).configure(sample);
+        new InjectionConfigurator(config).configure(sample);
 
         sample.validate();
     }
