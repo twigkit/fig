@@ -44,14 +44,12 @@ public class ConfigTest {
         Assert.assertNull(config.extension("root"));
         Assert.assertNotNull(config.extension("extension-1"));
         Assert.assertNotNull(config.extension("extension-1").extension("extension-1-1"));
+        Assert.assertNotNull(config.extension("extension-1", "extension-1-1"));
+
+        Assert.assertEquals(config.extension("extension-1", "extension-1-1"), config.extension("extension-1").extension("extension-1-1"));
 
         Assert.assertEquals(2, config.values().size());
         Assert.assertEquals(3, config.extension("extension-1").values().size());
         Assert.assertEquals(4, config.extension("extension-1").extension("extension-1-1").values().size());
-    }
-
-    @Test
-    public void testFind() {
-        Assert.assertEquals("ex-1-1-1-value", sample().find("ex-1-1-1-key").get());
     }
 }

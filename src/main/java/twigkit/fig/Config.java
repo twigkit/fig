@@ -22,23 +22,53 @@ public class Config {
         this.values = new LinkedHashMap<String, Value>();
     }
 
+    /**
+     * Name used to identify this {@link Config}.
+     *
+     * @return
+     */
     public String name() {
         return name;
     }
 
+    /**
+     * Get a {@link Value} from this {@link Config} by name.
+     * 
+     * @param name
+     * @return
+     */
     public Value value(String name) {
         return values.get(name);
     }
 
+    /**
+     * Create and set a {@link Value} for this {@link Config}.
+     *
+     * @param name
+     * @param value
+     * @return
+     */
     public Config set(String name, Object value) {
         return set(new Value().name(name).set(value));
     }
 
+    /**
+     * Set a {@link Value} for this {@link Config}.
+     *
+     * @param value
+     * @return
+     */
     public Config set(Value value) {
         values.put(value.name(), value);
         return this;
     }
 
+    /**
+     * Set multiple {@link Value}s for this {@link Config}.
+     * 
+     * @param values
+     * @return
+     */
     public Config set(Collection<Value> values) {
         for (Value value : values) {
             set(value);
@@ -46,14 +76,24 @@ public class Config {
         return this;
     }
 
-    public Value find(String name) {
-        ValueVisitor v = new ValueVisitor(name);
-        this.accept(v);
-        return v.getValue();
-    }
+    /**
+     * Get an extension of this {@link Config} by name ({@link Config#name()}. Retrieve {@link Config} extensions further
+     * down in the hierarchy by providing the name of each extension as a String e.g. extension("level1", "level2").
+     *
+     * @param name
+     * @return
+     */
+    public Config extension(String... name) {
+        Config c = extensions.get(name[0]);
 
-    public Config extension(String name) {
-        return extensions.get(name);
+        if (name.length == 1) {
+            return c;
+        } else {
+            for (int i = 1; i < name.length; i++) {
+                c = c.extension(name[i]);
+            }
+            return c;
+        }
     }
 
     public Config extendWith(Config configuration) {
@@ -94,30 +134,6 @@ public class Config {
         for (Config extension : extensions()) {
             visitor.extension(extension);
             extension.accept(visitor);
-        }
-    }
-
-    private class ValueVisitor implements ConfigVisitor {
-
-        private String name;
-        private Value value;
-
-        public ValueVisitor(String name) {
-            this.name = name;
-        }
-
-        public void visit(Config config) {}
-
-        public void value(Value value) {
-            if (value.name().equals(name)) {
-                this.value = value;
-            }
-        }
-
-        public void extension(Config extension) {}
-
-        public Value getValue() {
-            return value;
         }
     }
 }
