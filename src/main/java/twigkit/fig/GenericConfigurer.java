@@ -19,8 +19,7 @@ public class GenericConfigurer {
     public GenericConfigurer configure(Object target) {
         if (target instanceof Configurable) {
             new InterfaceConfigurer<Configurable>(config).configure((Configurable) target);
-        }
-        if (target.getClass().isAnnotationPresent(Configure.class)) {
+        } else {
             new InjectionConfigurer(config).configure(target);
         }
         return this;

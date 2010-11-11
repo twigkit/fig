@@ -1,10 +1,8 @@
 package twigkit.fig;
 
 import org.junit.Test;
-import twigkit.fig.annotation.Configure;
-import twigkit.fig.annotation.InjectionConfigurer;
-import twigkit.fig.sample.CombinationSample;
 import twigkit.fig.sample.InjectedSample;
+import twigkit.fig.sample.Sample;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -15,39 +13,67 @@ import static org.junit.Assert.assertNotNull;
 public class GenericConfigurerTest {
 
     @Test
-    public void testGenericConfigurer() {
+    public void testInjection() {
         final Config config = new Config("sample").set("element", "Krypton").set("symbol", "kr");
 
-        CombinationSample sample = new CombinationSampleImpl();
+        InjectedSample sample = new InjectedSample() {
+            @Override
+            public void validate() {
+                assertNotNull(config);
+                assertEquals(config, this.config);
+                assertNotNull(el);
+                assertEquals("Krypton", el);
+
+                assertNotNull(symbol);
+                assertEquals("kr", symbol);
+            }
+        };
 
         new GenericConfigurer(config).configure(sample);
 
         sample.validate();
+
+        InjectedSample sample2 = new InjectedSample() {
+            @Override
+            public void validate() {
+                assertNotNull(config);
+                assertEquals(config, this.config);
+                assertNotNull(el);
+                assertEquals("Krypton", el);
+
+                assertNotNull(symbol);
+                assertEquals("kr", symbol);
+            }
+        };
+
+        Configs.with(config).configure(sample2);
+
+        sample2.validate();
     }
 
     @Test
-    public void testConfigsConfigurer() {
-        final Config config = new Config("sample").set("element", "Krypton").set("symbol", "kr");
+    public void testInterface() {
+        Sample sample1 = new Sample() {
+            @Override
+            public void validate() {
+                assertNotNull(config.value("element"));
+                assertEquals("Krypton", config.value("element").get());
+            }
+        };
 
-        CombinationSample sample = new CombinationSampleImpl();
+        Sample sample2 = new Sample() {
+            @Override
+            public void validate() {
+                assertNotNull(config.value("symbol"));
+                assertEquals("kr", config.value("symbol").get());
+            }
+        };
 
-        Configs.with(config).configure(sample);
+        Config config = new Config("sample").set("element", "Krypton").set("symbol", "kr");
 
-        sample.validate();
-    }
+        new GenericConfigurer(config).configure(sample1).configure(sample2);
 
-    @Configure
-    public class CombinationSampleImpl extends CombinationSample {
-        @Override
-        public void validate() {
-            assertNotNull(viaInterface);
-
-            assertNotNull(viaInjection);
-
-            assertNotNull(el);
-            assertEquals("Krypton", el);
-            assertNotNull(symbol);
-            assertEquals("kr", symbol);
-        }
+        sample1.validate();
+        sample2.validate();
     }
 }
