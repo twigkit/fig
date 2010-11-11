@@ -27,16 +27,12 @@ Create configurations programmatically:
 
     Config config = new Config("server-settings").set("host", "127.0.0.1").set("port", 8080);
 
-Get values:
-
-    config.value("host").get();
-
 Extend configuration sets with specifics (inheriting and overriding values):
 
     config.extendWith(new Config("email-server").set("port", "25").set("protocol", "imap"));
     Config emailServer = config.subset("email-server");
 
-    emailServer.extendWith(new Config("secure-email").set("port", 465").set("security", "ssh"));
+    emailServer.extendWith(new Config("secure-email").set("port", 465").set("security", "ssl"));
 
 This would create configuration sets like:
 
@@ -54,6 +50,18 @@ This would create configuration sets like:
                   |-- port = 465
                   |-- protocol = imap
                   |-- security = ssl
+
+To find a particular configuration use:
+
+    Config secureEmail = Configs.find("secure-email");
+
+To get a value from that set:
+
+    String host = secureEmail.value("host").get();
+
+Or get all values:
+
+    List<Value> values = secureEmail.values();
 
 
 [TwigKit]: http://www.twigkit.com/
