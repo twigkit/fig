@@ -29,10 +29,10 @@ Create configurations programmatically:
 
 Extend configuration sets with specifics (inheriting and overriding values):
 
-    config.extendWith(new Config("email-server").set("port", "25").set("protocol", "imap"));
+    config.extendWith(new Config("email-server").set("port", 25).set("protocol", "imap"));
     Config emailServer = config.subset("email-server");
 
-    emailServer.extendWith(new Config("secure-email").set("port", 465").set("security", "ssl"));
+    emailServer.extendWith(new Config("secure-email").set("port", 465).set("security", "ssl"));
 
 This would create configuration sets like:
 
