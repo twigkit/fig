@@ -21,5 +21,4 @@ public abstract class InjectedSample {
 
     public abstract void validate();
 
-
 }

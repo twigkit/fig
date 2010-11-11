@@ -2,8 +2,14 @@ package twigkit.fig;
 
 import org.junit.Assert;
 import org.junit.Test;
+import twigkit.fig.annotation.InjectionConfigurer;
 import twigkit.fig.loader.PropertiesLoader;
+import twigkit.fig.sample.InjectedSample;
 import twigkit.fig.visitor.ConfigTreeWriter;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author mr.olafsson
@@ -52,5 +58,46 @@ public class FigTest {
 
         config = fig.find("metalloids");
         Assert.assertNotNull(config);
+    }
+
+    @Test
+    public void testStaticWith() {
+        final Config config = new Config("sample").set("element", "Krypton").set("symbol", "kr");
+
+        InjectedSample sample = new InjectedSample() {
+            @Override
+            public void validate() {
+                assertNotNull(config);
+                assertEquals(config, this.config);
+                assertNotNull(el);
+                assertEquals("Krypton", el);
+
+                assertNotNull(symbol);
+                assertEquals("kr", symbol);
+            }
+        };
+
+        Fig.with(config).configure(sample);
+
+        sample.validate();
+    }
+
+    @Test
+    public void testInstanceWith() {
+        InjectedSample sample = new InjectedSample() {
+            @Override
+            public void validate() {
+                assertNotNull(config);
+                assertEquals(config, this.config);
+                assertNull(el);
+
+                assertNotNull(symbol);
+                assertEquals("po", symbol);
+            }
+        };
+
+        Fig.load(new PropertiesLoader("elements")).with("elements", "solids", "metalloids", "polonium").configure(sample);
+
+        sample.validate();
     }
 }

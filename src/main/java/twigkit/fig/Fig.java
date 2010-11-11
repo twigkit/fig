@@ -46,58 +46,6 @@ public class Fig {
     }
 
     /**
-     * List of all top level {@link Config}s.
-     * 
-     * @return
-     */
-    public Collection<Config> configs() {
-        return configs.values();
-    }
-
-    /**
-     * Get a {@link Config} by name ({@link Config#name()}.
-     * 
-     * @param name
-     * @return
-     */
-    public Config get(String... name) {
-        Config c = configs.get(name[0]);
-
-        if (name.length == 1) {
-            return c;
-        } else {
-            for (int i = 1; i < name.length; i++) {
-                c = c.extension(name[i]);
-            }
-            return c;
-        }
-    }
-
-    /**
-     * Find a {@link Config} by name, traversing the hierarchy of {@link Config}s and their extensions.
-     * 
-     * @param name
-     * @return
-     */
-    public Config find(String name) {
-        Config config = null;
-        if (configs.containsKey(name)) {
-            config = configs.get(name);
-        } else {
-            ConfigFinder finder = new ConfigFinder(name);
-            for (Config c : configs()) {
-                c.accept(finder);
-                if (finder.getConfig() != null) {
-                    config = finder.getConfig();
-                    break;
-                }
-            }
-        }
-
-        return config;
-    }
-
-    /**
      * Add a {@link Config}.
      * 
      * @param config
@@ -105,6 +53,16 @@ public class Fig {
      */
     public Fig add(Config config) {
         return add(config, config.name());
+    }
+
+    /**
+     * Create a new {@link Config} but not add it to {@link Fig}.
+     * 
+     * @param name
+     * @return
+     */
+    public Config create(String name) {
+        return new Config(name);
     }
 
     /**
@@ -135,6 +93,77 @@ public class Fig {
         return this;
     }
 
+    /**
+     * List of all top level {@link Config}s.
+     *
+     * @return
+     */
+    public Collection<Config> configs() {
+        return configs.values();
+    }
+
+    /**
+     * Get a {@link Config} by name ({@link Config#name()}.
+     *
+     * @param name
+     * @return
+     */
+    public Config get(String... name) {
+        Config c = configs.get(name[0]);
+
+        if (name.length == 1) {
+            return c;
+        } else {
+            for (int i = 1; i < name.length; i++) {
+                c = c.extension(name[i]);
+            }
+            return c;
+        }
+    }
+
+    /**
+     * Find a {@link Config} by name, traversing the hierarchy of {@link Config}s and their extensions.
+     *
+     * @param name
+     * @return
+     */
+    public Config find(String name) {
+        Config config = null;
+        if (configs.containsKey(name)) {
+            config = configs.get(name);
+        } else {
+            ConfigFinder finder = new ConfigFinder(name);
+            for (Config c : configs()) {
+                c.accept(finder);
+                if (finder.getConfig() != null) {
+                    config = finder.getConfig();
+                    break;
+                }
+            }
+        }
+
+        return config;
+    }
+
+    /**
+     * Configure objects that implement {@link twigkit.fig.configurable.Configurable} or use
+     * {@link twigkit.fig.annotation.Configure} annotations with the {@link Config} represented by the name (or full path)
+     * given. Uses the {@link #get(String...)} method to retrieve the {@link Config}.
+     *
+     * @param name
+     * @return
+     */
+    public GenericConfigurer with(String... name) {
+        return with(get(name));
+    }
+
+    /**
+     * Configure objects that implement {@link twigkit.fig.configurable.Configurable} or use
+     * {@link twigkit.fig.annotation.Configure} annotations with the {@link Config} provided.
+     * 
+     * @param config
+     * @return
+     */
     public static GenericConfigurer with(Config config) {
         return new GenericConfigurer(config);
     }
