@@ -13,7 +13,7 @@ public class ConfigsTest {
     @Test
     public void testLoadProperties() {
         Configs fig = new Configs();
-        PropertiesLoader loader = new PropertiesLoader(fig);
+        PropertiesLoader loader = new PropertiesLoader(fig, "confs");
 
         for (Config config : fig.configs().values()) {
             new ConfigTreeWriter(config);
@@ -23,7 +23,7 @@ public class ConfigsTest {
     @Test
     public void testFindConfig() {
         Configs fig = new Configs();
-        PropertiesLoader loader = new PropertiesLoader(fig);
+        PropertiesLoader loader = new PropertiesLoader(fig, "confs");
 
         Config config = fig.find("does-not-exist");
         Assert.assertNull(config);

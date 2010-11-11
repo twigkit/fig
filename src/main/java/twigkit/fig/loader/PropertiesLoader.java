@@ -16,9 +16,9 @@ import java.util.*;
  */
 public class PropertiesLoader {
 
-    public PropertiesLoader(Configs configs) {
+    public PropertiesLoader(Configs configs, String path) {
         try {
-            File f = new File(this.getClass().getClassLoader().getResource("confs").toURI());
+            File f = new File(this.getClass().getClassLoader().getResource(path).toURI());
 
             FilenameFilter filter = new FilenameFilter() {
                 public boolean accept(File file, String s) {
@@ -37,14 +37,14 @@ public class PropertiesLoader {
                 Properties p = new Properties();
                 try {
                     p.load(new FileInputStream(file));
-                    String[] path = file.getName().substring(0, file.getName().lastIndexOf(".")).split("_");
+                    String[] levels = file.getName().substring(0, file.getName().lastIndexOf(".")).split("_");
 
-                    Config config = new Config(path[path.length - 1]);
+                    Config config = new Config(levels[levels.length - 1]);
                     for (Map.Entry prop : p.entrySet()) {
                         config.set(new Value<Object>(prop.getKey().toString(), prop.getValue(), false));
                     }
 
-                    configs.add(path, config);
+                    configs.add(levels, config);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
