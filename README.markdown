@@ -33,10 +33,10 @@ Get values:
 
 Extend configuration sets with specifics (inheriting and overriding values):
 
-    config.subset(new Config("email-server").set("port", "25").set("protocol", "imap"));
+    config.extendWith(new Config("email-server").set("port", "25").set("protocol", "imap"));
     Config emailServer = config.subset("email-server");
 
-    emailServer.subset(new Config("secure-email").set("port", 465").set("security", "ssh"));
+    emailServer.extendWith(new Config("secure-email").set("port", 465").set("security", "ssh"));
 
 This would create configuration sets like:
 
