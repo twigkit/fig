@@ -29,7 +29,7 @@ Load from Java Properties files:
          port = 25
          protocol = imap
 
-        servers_email_secure.conf
+        servers_email_secure-mail.conf
          port = 465
          security = ssl
 
@@ -45,7 +45,7 @@ Extend configuration sets with specifics (inheriting and overriding values):
     servers.extendWith(new Config("email").set("port", 25).set("protocol", "imap"));
     Config email = config.subset("email");
 
-    emailServer.extendWith(new Config("secure").set("port", 465).set("security", "ssl"));
+    email.extendWith(new Config("secure-mail").set("port", 465).set("security", "ssl"));
 
 This would create configuration sets like:
 
@@ -58,7 +58,7 @@ This would create configuration sets like:
             |-- port = 25
             |-- protocol = imap
             |
-            +-- SECURE
+            +-- SECURE-MAIL
                   |-- host = 127.0.0.1
                   |-- port = 465
                   |-- protocol = imap
@@ -66,7 +66,7 @@ This would create configuration sets like:
 
 To find a particular configuration use:
 
-    Config secureEmail = Configs.find("secure");
+    Config secureMail = Configs.find("secure-mail");
 
 To get a value from that set:
 
