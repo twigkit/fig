@@ -20,18 +20,19 @@ Usage
 
 Given the following Java Properties files:
 
->conf/
->    servers.conf
->     host = 127.0.0.1
->     port = 8080
+>confs/
 >
->    servers_email.conf
->     port = 25
->     protocol = imap
+>  servers.conf
+>   host = 127.0.0.1
+>   port = 8080
 >
->    servers_email_secure-mail.conf
->     port = 465
->     security = ssl
+>  servers_email.conf
+>   port = 25
+>   protocol = imap
+>
+>  servers_email_secure-mail.conf
+>   port = 465
+>   security = ssl
 
 Load configurations using:
 
