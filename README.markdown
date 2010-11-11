@@ -18,23 +18,25 @@ Add the fig-*{version}*.jar to your project's classpath. If you use [Maven][Mave
 Usage
 -----
 
-Load configurations from Java Properties files:
+Given the following Java Properties files:
 
-    conf/
-        servers.conf
-         host = 127.0.0.1
-         port = 8080
+>conf/
+>    servers.conf
+>     host = 127.0.0.1
+>     port = 8080
+>
+>    servers_email.conf
+>     port = 25
+>     protocol = imap
+>
+>    servers_email_secure-mail.conf
+>     port = 465
+>     security = ssl
 
-        servers_email.conf
-         port = 25
-         protocol = imap
-
-        servers_email_secure-mail.conf
-         port = 465
-         security = ssl
+Load configurations using:
 
     Configs.load(new PropertiesLoader("confs"));
-    Config config = Configs.get("servers");
+    Config servers = Configs.get("servers");
 
 ...or create configurations programmatically:
 
