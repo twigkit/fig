@@ -36,20 +36,20 @@ Extend configuration sets with specifics (inheriting and overriding values):
 
 This would create configuration sets like:
 
->SERVER-SETTINGS
->  |-- host = 127.0.0.1
->  |-- port = 8080
->  |
->  +-- EMAIL-SERVER
->        |-- host = 127.0.0.1
->        |-- port = 25
->        |-- protocol = imap
->        |
->        +-- SECURE-EMAIL
->              |-- host = 127.0.0.1
->              |-- port = 465
->              |-- protocol = imap
->              |-- security = ssl
+>   SERVER-SETTINGS
+>     |-- host = 127.0.0.1
+>     |-- port = 8080
+>     |
+>     +-- EMAIL-SERVER
+>           |-- host = 127.0.0.1
+>           |-- port = 25
+>           |-- protocol = imap
+>           |
+>           +-- SECURE-EMAIL
+>                 |-- host = 127.0.0.1
+>                 |-- port = 465
+>                 |-- protocol = imap
+>                 |-- security = ssl
 
 To find a particular configuration use:
 
