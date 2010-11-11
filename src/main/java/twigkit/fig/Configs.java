@@ -15,10 +15,19 @@ public class Configs {
 
     private Map<String, Config> configs;
 
+    /**
+     * Create an empty {@link Config}s set.
+     * 
+     */
     public Configs() {
         configs = new LinkedHashMap<String, Config>();
     }
 
+    /**
+     * Create with {@link twigkit.fig.loader.Loader}s.
+     * 
+     * @param loader
+     */
     public Configs(Loader... loader) {
         this();
         for (Loader l : loader) {
@@ -26,6 +35,12 @@ public class Configs {
         }
     }
 
+    /**
+     * Create with {@link twigkit.fig.loader.Loader}s.
+     * 
+     * @param loader
+     * @return
+     */
     public static Configs load(Loader... loader) {
         return new Configs(loader);
     }
@@ -34,10 +49,22 @@ public class Configs {
         return configs;
     }
 
+    /**
+     * Get a {@link Config} by name ({@link Config#name()}.
+     * 
+     * @param name
+     * @return
+     */
     public Config get(String name) {
         return configs.get(name);
     }
 
+    /**
+     * Find a {@link Config} by name, traversing the hierarchy of {@link Config}s and their extensions.
+     * 
+     * @param name
+     * @return
+     */
     public Config find(String name) {
         Config config = null;
         if (configs.containsKey(name)) {
@@ -56,6 +83,12 @@ public class Configs {
         return config;
     }
 
+    /**
+     * Add a given {@link Config} anywhere in the hierarchy.
+     * 
+     * @param path
+     * @param config
+     */
     public void add(String[] path, Config config) {
         if (path.length == 1) {
             configs.put(config.name(), config);
