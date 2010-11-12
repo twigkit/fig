@@ -3,7 +3,6 @@ Fig - The Easy Java Configuration Framework
 
 **Create and manage hierarchical configurations with Java.**
 
-
 Installation
 ------------
 
