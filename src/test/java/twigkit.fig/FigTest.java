@@ -34,15 +34,15 @@ public class FigTest {
         Fig fig = Fig.load(new PropertiesLoader("confs"), new PropertiesLoader("elements"));
 
         Config config = fig.get("does-not-exist");
-        Assert.assertNull(config);
+        assertNull(config);
 
         config = fig.get("root");
-        Assert.assertNotNull(config);
-        Assert.assertEquals("root", config.name());
+        assertNotNull(config);
+        assertEquals("root", config.name());
 
         config = fig.get("root", "extension-1", "extension-1-1");
-        Assert.assertNotNull(config);
-        Assert.assertEquals("extension-1-1", config.name());
+        assertNotNull(config);
+        assertEquals("extension-1-1", config.name());
     }
 
     @Test
@@ -50,13 +50,22 @@ public class FigTest {
         Fig fig = Fig.load(new PropertiesLoader("confs"), new PropertiesLoader("elements"));
 
         Config config = fig.find("does-not-exist");
-        Assert.assertNull(config);
+        assertNull(config);
 
         config = fig.find("extension-1-2");
-        Assert.assertNotNull(config);
+        assertNotNull(config);
 
         config = fig.find("metalloids");
-        Assert.assertNotNull(config);
+        assertNotNull(config);
+    }
+
+    @Test
+    public void testCreate() {
+        Fig fig = new Fig();
+        Config config = fig.create("conf").set("label", "value");
+        assertNotNull(config);
+        assertEquals("value", config.value("label").as_string());
+        assertNull(fig.get("conf"));
     }
 
     @Test

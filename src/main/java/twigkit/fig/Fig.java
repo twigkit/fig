@@ -60,7 +60,7 @@ public class Fig {
      * @param name
      * @return
      */
-    public Config create(String name) {
+    public static Config create(String name) {
         return new Config(name);
     }
 

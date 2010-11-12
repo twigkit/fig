@@ -40,7 +40,7 @@ Load configurations using:
 
 ...or create configurations programmatically:
 
-    Config servers = new Config("servers").set("host", "127.0.0.1").set("port", 8080);
+    Config servers = Configs.create("servers").set("host", "127.0.0.1").set("port", 8080);
 
 Extend configuration sets with specifics (inheriting and overriding values):
 
