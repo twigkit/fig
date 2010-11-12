@@ -96,6 +96,12 @@ public class Config {
         }
     }
 
+    /**
+     * Add a {@link Config} as an extension to this one.
+     * 
+     * @param configuration
+     * @return
+     */
     public Config extendWith(Config configuration) {
         configuration.parents().addAll(parents());
         configuration.parent(this);
@@ -104,10 +110,20 @@ public class Config {
         return this;
     }
 
+    /**
+     * Get all {@link Config}s that extend this one.
+     * @return
+     */
     public Collection<Config> extensions() {
         return extensions.values();
     }
 
+    /**
+     * Get all {@link twigkit.fig.Value}s for this {@link Config}. If this {@link Config} extends others, it will
+     * include and override any values from the parents.
+     * 
+     * @return
+     */
     public Collection<Value> values() {
         Map<String, Value> combined = new LinkedHashMap<String, Value>();
         for (Config conf : parents()) {
@@ -117,15 +133,31 @@ public class Config {
         return combined.values();
     }
 
+    /**
+     * Get all parent {@link Config}s.
+     * 
+     * @return
+     */
     public List<Config> parents() {
         return parents;
     }
 
+    /**
+     * Add a {@link Config} as a parent.
+     * 
+     * @param parent
+     * @return
+     */
     Config parent(Config parent) {
         this.parents.add(parent);
         return this;
     }
 
+    /**
+     * Accept a {@link ConfigVisitor}.
+     * 
+     * @param visitor
+     */
     public void accept(ConfigVisitor visitor) {
         visitor.visit(this);
         for (Value value : values()) {

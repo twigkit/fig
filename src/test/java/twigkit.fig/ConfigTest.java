@@ -3,6 +3,9 @@ package twigkit.fig;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author mr.olafsson
  */
@@ -51,5 +54,18 @@ public class ConfigTest {
         Assert.assertEquals(2, config.values().size());
         Assert.assertEquals(3, config.extension("extension-1").values().size());
         Assert.assertEquals(4, config.extension("extension-1").extension("extension-1-1").values().size());
+    }
+
+    @Test
+    public void testSettingValueCollection() {
+        List<Value> values = new ArrayList<Value>();
+        values.add(new Value("key1", "value1"));
+        values.add(new Value("key2", "value2"));
+        values.add(new Value("key3", "value3"));
+
+        Config config = new Config("test");
+        config.set(values);
+
+        Assert.assertEquals(3, config.values().size());
     }
 }
