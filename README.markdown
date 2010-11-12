@@ -18,6 +18,8 @@ Add the fig-*{version}*.jar to your project's classpath. If you use [Maven][Mave
 Usage
 -----
 
+### Creating or getting configurations ###
+
 Given the following Java Properties files:
 
     confs/
@@ -35,19 +37,19 @@ Given the following Java Properties files:
 
 Load configurations using:
 
-    Configs.load(new PropertiesLoader("confs"));
-    Config servers = Configs.get("servers");
+    Fig.load( new PropertiesLoader("confs") ); // Supports multiple Loaders as varargs
+    Config servers = Fig.get("servers");
 
 ...or create configurations programmatically:
 
-    Config servers = Configs.create("servers").set("host", "127.0.0.1").set("port", 8080);
+    Config servers = Fig.create("servers").set("host", "127.0.0.1").set("port", 8080);
 
 Extend configuration sets with specifics (inheriting and overriding values):
 
-    servers.extendWith(new Config("email").set("port", 25).set("protocol", "imap"));
+    servers.extend_with( new Config("email").set("port", 25).set("protocol", "imap") ); // Using Config constructor
     Config email = config.subset("email");
 
-    email.extendWith(new Config("secure-mail").set("port", 465).set("security", "ssl"));
+    email.extend_with( create("secure-mail").set("port", 465).set("security", "ssl") ); // Using static import of Fig
 
 This would create configuration sets like:
 
@@ -66,9 +68,12 @@ This would create configuration sets like:
                   |-- protocol = imap
                   |-- security = ssl
 
+
+### Using configurations ###
+
 To find a particular configuration use:
 
-    Config secureMail = Configs.find("secure-mail");
+    Config secureMail = Fig.find("secure-mail");
 
 To get a value from that set:
 
@@ -77,6 +82,21 @@ To get a value from that set:
 Or get all values:
 
     List<Value> values = secureEmail.values();
+
+
+### Configuring objects ###
+
+#### Configurable interface ####
+
+text here.
+
+#### Annotations ####
+
+text here.
+
+#### Configuring instances ####
+
+text here.
 
 
 [TwigKit]: http://www.twigkit.com/
