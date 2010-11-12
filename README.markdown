@@ -68,7 +68,7 @@ This would create hierarchical configuration sets (which extend and override) su
                   |-- host = 127.0.0.1
                   |-- port = 465
                   |-- protocol = imap
-                  |-- security = ssl
+                  |-- secure = true
 
 
 ### Using configurations ###
@@ -91,6 +91,11 @@ Or get all values:
 
     List<Value> values = secure.values();
 
+To get particular values typed use:
+
+    secure.value("host").as_string();
+    secure.value("port").as_int();
+    secure.value("secure).as_boolean();
 
 ### Configuring objects ###
 
