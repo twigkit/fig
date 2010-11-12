@@ -49,7 +49,7 @@ Load configurations using:
 Extend configuration sets with specifics (inheriting and overriding values):
 
     servers.extend_with( new Config("email").set("port", 25).set("protocol", "imap") ); // Using Config constructor
-    Config email = config.subset("email");
+    Config email = servers.subset("email");
 
     email.extend_with( create("secure-mail").set("port", 465).set("security", "ssl") ); // Using static import of Fig
 
