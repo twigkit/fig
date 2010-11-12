@@ -20,7 +20,9 @@ Usage
 
 ### Creating or getting configurations ###
 
-Given the following Java Properties files:
+#### From Properties files ####
+
+Given the following files:
 
     confs/
         servers.conf
@@ -40,7 +42,7 @@ Load configurations using:
     Fig.load( new PropertiesLoader("confs") ); // Supports multiple Loaders as varargs
     Config servers = Fig.get("servers");
 
-...or create configurations programmatically:
+#### Creating configurations programmatically ####
 
     Config servers = Fig.create("servers").set("host", "127.0.0.1").set("port", 8080);
 
@@ -73,30 +75,64 @@ This would create configuration sets like:
 
 To find a particular configuration use:
 
-    Config secureMail = Fig.find("secure-mail");
+    Config secure = Fig.find("secure-mail");
 
 To get a value from that set:
 
-    String host = secureEmail.value("host").get();
+    String host = secure.value("host").get();
 
 Or get all values:
 
-    List<Value> values = secureEmail.values();
+    List<Value> values = secure.values();
 
 
 ### Configuring objects ###
 
 #### Configurable interface ####
 
-text here.
+This is simple enough.
+
+    public interface Configurable {
+
+        public void configure(Config config);
+
+    }
 
 #### Annotations ####
 
-text here.
+Fig supports annotating classes to configure certain members or get a reference to a **Config**:
+
+    public class EmailServer {
+
+        @Configure
+        private Config config;
+
+        @Configure.Value( name = "host" )
+        private String hostUrl;
+
+        @Configure.Value
+        private int port;
+
+        ...
+    }
+
+In this example the *config* member would be given a reference to the **Config** object, the *hostUrl* member would be
+given the value labelled *host* in the configuration file, and finally the *port* member would be provided with the integer
+value labelled *port* in the configuration file.
 
 #### Configuring instances ####
 
-text here.
+To configure objects annotated with **@Configure** or that implement **Configurable** simply:
+
+    EmailServer emailserver = new EmailServer();
+
+    Fig.with("secure-mail").configure(emailserver); // Pick a configuration from Fig
+        or
+    Fig.with(secure).configure(emailserver); // Using an instance of a configuration
+
+Configure returns an instance of the configured object so you can then use that:
+
+    Fig.with("secure-mail").configure(emailserver).sendMail(...);
 
 
 [TwigKit]: http://www.twigkit.com/
