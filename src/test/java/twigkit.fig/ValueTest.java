@@ -41,6 +41,11 @@ public class ValueTest {
         v.set(true);
         Assert.assertEquals(true, v.as_boolean());
         Assert.assertEquals("true", v.as_string());
+
+        v.set("true");
+        Assert.assertEquals(true, v.as_boolean());
+        Assert.assertEquals("true", v.as_string());
+
     }
     
     @Test
