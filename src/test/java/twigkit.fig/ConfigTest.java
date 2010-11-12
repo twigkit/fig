@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 
  * @author mr.olafsson
  */
 public class ConfigTest {
