@@ -22,7 +22,7 @@ public class ConfigTreeWriter implements ConfigVisitor {
     }
 
     public void value(Value value) {
-        System.out.println( pad() + "  |-- " + value.name() + " = " + value.get() );
+        System.out.println( pad() + "  |-- " + value.label() + " = " + value.get() );
     }
 
     public void extension(Config extension) {

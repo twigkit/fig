@@ -2,13 +2,14 @@ package twigkit.fig;
 
 import twigkit.fig.visitor.ConfigVisitor;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 
  * @author mr.olafsson
  */
-public class Config {
+public class Config implements Serializable {
 
     private String name;
     private List<Config> parents;
@@ -33,7 +34,7 @@ public class Config {
     }
 
     /**
-     * Get a {@link Value} from this {@link Config} by name.
+     * Get a {@link Value} from this {@link Config} by label.
      * 
      * @param name
      * @return
@@ -50,7 +51,7 @@ public class Config {
      * @return
      */
     public Config set(String name, Object value) {
-        return set(new Value().name(name).set(value));
+        return set(new Value().label(name).set(value));
     }
 
     /**
@@ -60,7 +61,7 @@ public class Config {
      * @return
      */
     public Config set(Value value) {
-        values.put(value.name(), value);
+        values.put(value.label(), value);
         return this;
     }
 

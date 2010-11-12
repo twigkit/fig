@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class Value<T> implements Serializable {
 
-    private String name;
+    private String label;
     private T value;
     private boolean required;
 
@@ -16,41 +16,113 @@ public class Value<T> implements Serializable {
         this("", null);
     }
 
-    public Value(String name, T value) {
-        this(name, value, false);
+    public Value(String label, T value) {
+        this(label, value, false);
     }
 
-    public Value(String name, T value, boolean required) {
-        this.name = name;
+    public Value(String label, T value, boolean required) {
+        this.label = label;
         this.value = value;
         this.required = required;
     }
 
-    public String name() {
-        return name;
+    /**
+     * Get the label/name of this {@link Value}.
+     * 
+     * @return
+     */
+    public String label() {
+        return label;
     }
 
-    public Value name(String name) {
-        this.name = name;
+    /**
+     * Set the label/name of this value.
+     *
+     * @param label
+     * @return
+     */
+    public Value label(String label) {
+        this.label = label;
         return this;
     }
 
+    /**
+     * Get the object associated with this {@link Value}.
+     * 
+     * @return
+     */
     public T get() {
         return value;
     }
 
+    /**
+     * Set the object associated with this {@link Value}.
+     *
+     * @param value
+     * @return
+     */
     public Value set(T value) {
         this.value = value;
         return this;
     }
 
+    /**
+     * Get the object of this {@link Value} as a String.
+     * 
+     * @return
+     */
+    public String as_string() {
+        return value.toString();
+    }
+
+    /**
+     * Get the object of this {@link Value} as an Integer.
+     * 
+     * @return
+     */
+    public int as_int() {
+        if (value instanceof Integer) {
+            return (Integer) value;
+        } else {
+            return Integer.parseInt(as_string());
+        }
+    }
+
+    /**
+     * Get the object of this {@link Value} as a Boolean.
+     *
+     * @return
+     */
+    public boolean as_boolean() {
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        } else {
+            return Boolean.parseBoolean(as_string());
+        }
+    }
+
+    /**
+     * Returns true if this {@link Value} is required, i.e. it can not be null or an empty string.
+     * 
+     * @return
+     */
     public boolean required() {
         return required;
     }
 
+    /**
+     * Set this {@link Value} as required, i.e. should not be null or contain an empty string.
+     * 
+     * @return
+     */
     public Value require() {
         this.required = true;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 
     @Override
@@ -58,18 +130,18 @@ public class Value<T> implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Value attribute = (Value) o;
+        Value value1 = (Value) o;
 
-        if (required != attribute.required) return false;
-        if (name != null ? !name.equals(attribute.name) : attribute.name != null) return false;
-        if (value != null ? !value.equals(attribute.value) : attribute.value != null) return false;
+        if (required != value1.required) return false;
+        if (label != null ? !label.equals(value1.label) : value1.label != null) return false;
+        if (value != null ? !value.equals(value1.value) : value1.value != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = label != null ? label.hashCode() : 0;
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (required ? 1 : 0);
         return result;

@@ -5,7 +5,7 @@ import twigkit.fig.Value;
 
 /**
  * {@link twigkit.fig.visitor.ConfigVisitor} that goes through all {@link twigkit.fig.Config} objects that match
- * the 'name' provided via the constructor. {@link ConfigFinder#getConfig()} will return the last one
+ * the 'label' provided via the constructor. {@link ConfigFinder#getConfig()} will return the last one
  * that matches.
  *
  * @author mr.olafsson
