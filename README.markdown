@@ -1,7 +1,8 @@
-Fig - Java Configuration Framework
+Fig - The Easy Java Configuration Framework
 ========
 
-**Simple framework for managing hierarchical configurations.**
+**Create and manage hierarchical configurations with Java.**
+
 
 Installation
 ------------
@@ -73,6 +74,12 @@ This would create hierarchical configuration sets (which extend and override) su
 
 ### Using configurations ###
 
+To get a particular configuration you can either get it from the top level or down the hierarchy:
+
+    Config server = Fig.get("servers");
+        // or
+    Config secure = Fig.get("servers", "email", "secure-mail");
+
 To find a particular configuration use:
 
     Config secure = Fig.find("secure-mail");
@@ -127,7 +134,7 @@ To configure objects annotated with **@Configure** or that implement **Configura
     EmailServer emailserver = new EmailServer();
 
     Fig.with("secure-mail").configure(emailserver); // Pick a configuration from Fig
-        or
+        // or
     Fig.with(secure).configure(emailserver); // Using an instance of a configuration
 
 Configure returns an instance of the configured object so you can then use that:
