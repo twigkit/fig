@@ -91,11 +91,12 @@ Or get all values:
 
     List<Value> values = secure.values();
 
-To get particular values typed use:
+To get particular value types use:
 
     secure.value("host").as_string();
     secure.value("port").as_int();
     secure.value("secure).as_boolean();
+    ...
 
 ### Configuring objects ###
 
