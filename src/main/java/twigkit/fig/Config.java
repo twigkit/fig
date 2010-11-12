@@ -5,6 +5,7 @@ import twigkit.fig.visitor.ConfigVisitor;
 import java.util.*;
 
 /**
+ * 
  * @author mr.olafsson
  */
 public class Config {
