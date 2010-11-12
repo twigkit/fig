@@ -85,7 +85,7 @@ To find a particular configuration use:
 
 To get a value from that set:
 
-    String host = secure.value("host").get();
+    String host = secure.value("host").as_string();
 
 Or get all values:
 
