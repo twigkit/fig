@@ -82,10 +82,10 @@ public class Fig {
                         parent = c;
                     } else {
                         c = new Config(path[i]);
-                        parent.extendWith(c);
+                        parent.extend_with(c);
                     }
                 }
-                parent.extendWith(config);
+                parent.extend_with(config);
             }
         }
 

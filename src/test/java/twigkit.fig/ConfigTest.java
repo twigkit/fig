@@ -23,13 +23,13 @@ public class ConfigTest {
         Config extension_2 = new Config("extension-2").set("ex-2-key", "ex-2-value");
         Config extension_2_1 = new Config("extension-2-1").set("root-1-key", "root-1-value-override").set("ex-2-1-key", "ex-2-1-value");
 
-        root.extendWith(extension_1);
-        extension_1.extendWith(extension_1_1);
-        extension_1_1.extendWith(extension_1_1_1);
-        extension_1.extendWith(extension_1_2);
+        root.extend_with(extension_1);
+        extension_1.extend_with(extension_1_1);
+        extension_1_1.extend_with(extension_1_1_1);
+        extension_1.extend_with(extension_1_2);
 
-        root.extendWith(extension_2);
-        extension_2.extendWith(extension_2_1);
+        root.extend_with(extension_2);
+        extension_2.extend_with(extension_2_1);
 
         return root;
     }
