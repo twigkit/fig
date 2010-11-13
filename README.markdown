@@ -2,6 +2,7 @@ Fig - The Easy Java Configuration Framework
 ========
 
 **Create and manage hierarchical configurations with Java.**
+Create master configuration files, and then simply override values from these in separate files.
 
 Installation
 ------------
@@ -39,8 +40,8 @@ Given the following files:
 
 Load configurations using:
 
-    Fig.load( new PropertiesLoader("confs") ); // Supports multiple Loaders as varargs
-    Config servers = Fig.get("servers");
+    Fig = Fig.load( new PropertiesLoader("confs") ); // Supports multiple Loaders as varargs
+    Config servers = fig.get("servers");
 
 #### Creating configurations programmatically ####
 
