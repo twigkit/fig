@@ -54,7 +54,7 @@ Extend configuration sets with specifics (inheriting and overriding values):
 
     email.extend_with( create("secure-mail").set("port", 465).set("secure", true) ); // Using static import of Fig
 
-This would create hierarchical configuration sets (which extend and override) such as:
+This would create hierarchical configuration sets (output from **ConfigTreeWriter**) which extend and override such as:
 
     SERVERS
       |-- host = 127.0.0.1
