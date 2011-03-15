@@ -68,6 +68,11 @@ public class FigTest {
 		assertEquals("sub-1-value", config.value("sub-1-key").as_string());
 		assertEquals("sub-ex-1-value", config.value("sub-ex-1-key").as_string());
 
+		fig = Fig.load(new PropertiesLoader("confs/sub/group"));
+
+        config = fig.get("child-1");
+        assertNotNull(config);
+		assertEquals("sub-group-child-1-value", config.value("sub-group-child-1-key").as_string());
 	}
 
     @Test
