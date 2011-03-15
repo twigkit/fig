@@ -88,6 +88,45 @@ public class Value<T> implements Serializable {
         }
     }
 
+	/**
+     * Get the object of this {@link Value} as a Long.
+     *
+     * @return
+     */
+    public long as_long() {
+        if (value instanceof Long) {
+            return (Long) value;
+        } else {
+            return Long.parseLong(as_string());
+        }
+    }
+
+	/**
+     * Get the object of this {@link Value} as a Float.
+     *
+     * @return
+     */
+    public float as_float() {
+        if (value instanceof Float) {
+            return (Float) value;
+        } else {
+            return Float.parseFloat(as_string());
+        }
+    }
+
+	/**
+     * Get the object of this {@link Value} as a Double.
+     *
+     * @return
+     */
+    public double as_double() {
+        if (value instanceof Double) {
+            return (Double) value;
+        } else {
+            return Double.parseDouble(as_string());
+        }
+    }
+
     /**
      * Get the object of this {@link Value} as a Boolean.
      *
@@ -110,14 +149,18 @@ public class Value<T> implements Serializable {
         return required;
     }
 
+	public Value required(boolean required) {
+		this.required = true;
+        return this;
+	}
+
     /**
      * Set this {@link Value} as required, i.e. should not be null or contain an empty string.
      * 
      * @return
      */
     public Value require() {
-        this.required = true;
-        return this;
+        return required(true);
     }
 
     @Override

@@ -36,6 +36,7 @@ public class ValueTest {
         
         v.set(100);
         Assert.assertEquals(100, v.as_int());
+	    Assert.assertEquals(100l, v.as_long());
         Assert.assertEquals("100", v.as_string());
 
         v.set(true);
@@ -45,6 +46,11 @@ public class ValueTest {
         v.set("true");
         Assert.assertEquals(true, v.as_boolean());
         Assert.assertEquals("true", v.as_string());
+
+	    v.set(100.12);
+        Assert.assertEquals(100.12f, v.as_float(), 2);
+	    Assert.assertEquals(100.12d, v.as_double(), 2);
+        Assert.assertEquals("100.12", v.as_string());
 
     }
     

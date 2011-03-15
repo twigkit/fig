@@ -40,7 +40,16 @@ public class Config implements Serializable {
      * @return
      */
     public Value value(String name) {
-        return values.get(name);
+		if (has(name)) {
+			return values.get(name);
+		}
+	    for (Config conf : parents()) {
+            if (conf.has(name)) {
+	            return conf.value(name);
+            }
+        }
+
+	    return null;
     }
 
     /**
@@ -77,6 +86,16 @@ public class Config implements Serializable {
         }
         return this;
     }
+
+	/**
+	 * Check if a {@link Value} is locally set for the given name (key).
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public boolean has(String name) {
+		return values.containsKey(name);
+	}
 
     /**
      * Get an extension of this {@link Config} by name ({@link Config#name()}. Retrieve {@link Config} extensions further
@@ -120,6 +139,21 @@ public class Config implements Serializable {
         return extensions.values();
     }
 
+	/**
+	 * Get all {@link twigkit.fig.Value}s for this {@link Config} as a {@link Map<String, Value>}. If this {@link Config} extends others, it will
+     * include and override any values from the parents.
+	 *
+	 * @return
+	 */
+	public Map<String, Value> map() {
+		Map<String, Value> combined = new LinkedHashMap<String, Value>();
+        for (Config conf : parents()) {
+            combined.putAll(conf.values);
+        }
+        combined.putAll(values);
+        return combined;
+	}
+
     /**
      * Get all {@link twigkit.fig.Value}s for this {@link Config}. If this {@link Config} extends others, it will
      * include and override any values from the parents.
@@ -127,12 +161,7 @@ public class Config implements Serializable {
      * @return
      */
     public Collection<Value> values() {
-        Map<String, Value> combined = new LinkedHashMap<String, Value>();
-        for (Config conf : parents()) {
-            combined.putAll(conf.values);
-        }
-        combined.putAll(values);
-        return combined.values();
+       return map().values();
     }
 
     /**

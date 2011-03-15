@@ -59,6 +59,17 @@ public class FigTest {
         assertNotNull(config);
     }
 
+	@Test
+	public void testLoadSubFolder() {
+		Fig fig = Fig.load(new PropertiesLoader("confs/sub"));
+
+        Config config = fig.get("sub-root", "extension-1");
+        assertNotNull(config);
+		assertEquals("sub-1-value", config.value("sub-1-key").as_string());
+		assertEquals("sub-ex-1-value", config.value("sub-ex-1-key").as_string());
+
+	}
+
     @Test
     public void testCreate() {
         Fig fig = new Fig();

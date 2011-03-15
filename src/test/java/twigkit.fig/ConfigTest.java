@@ -55,6 +55,12 @@ public class ConfigTest {
         Assert.assertEquals(2, config.values().size());
         Assert.assertEquals(3, config.extension("extension-1").values().size());
         Assert.assertEquals(4, config.extension("extension-1").extension("extension-1-1").values().size());
+
+	    // Overridden value
+	    Assert.assertEquals("root-1-value-override", config.extension("extension-2", "extension-2-1").value("root-1-key").as_string());
+
+	    // Inherited value
+	    Assert.assertEquals("root-2-value", config.extension("extension-2", "extension-2-1").value("root-2-key").as_string());
     }
 
     @Test
