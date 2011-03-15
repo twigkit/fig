@@ -63,16 +63,15 @@ public class FigTest {
 	public void testLoadSubFolder() {
 		Fig fig = Fig.load(new PropertiesLoader("confs/sub"));
 
-        Config config = fig.get("sub-root", "extension-1");
+        Config config = fig.get("group", "folder-extension");
         assertNotNull(config);
 		assertEquals("sub-1-value", config.value("sub-1-key").as_string());
-		assertEquals("sub-ex-1-value", config.value("sub-ex-1-key").as_string());
+		assertEquals("group-folder-extension-value", config.value("group-folder-extension-key").as_string());
+		assertNotNull(config.value("sub-group-child-1-key"));
+		assertNull(config.value("sub-group-child-1-key").get());
+		assertEquals("", config.value("sub-group-child-1-key").as_string());
 
-		fig = Fig.load(new PropertiesLoader("confs/sub/group"));
-
-        config = fig.get("child-1");
-        assertNotNull(config);
-		assertEquals("sub-group-child-1-value", config.value("sub-group-child-1-key").as_string());
+		new ConfigTreeWriter(fig.get("group"));
 	}
 
     @Test

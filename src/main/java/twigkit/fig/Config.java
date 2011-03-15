@@ -49,7 +49,7 @@ public class Config implements Serializable {
             }
         }
 
-	    return null;
+	    return new Value(name, null);
     }
 
     /**

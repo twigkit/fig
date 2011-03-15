@@ -14,6 +14,7 @@ import java.util.*;
 public class PropertiesLoader implements Loader {
 
 	private String path;
+	private int parentPathLength;
 
 	public PropertiesLoader(String path) {
 		this.path = path;
@@ -22,6 +23,7 @@ public class PropertiesLoader implements Loader {
 	public void load(Fig fig) {
 		try {
 			File f = new File(this.getClass().getClassLoader().getResource(path).toURI());
+			parentPathLength = f.getAbsolutePath().length();
 			readFolder(fig, f);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -42,10 +44,28 @@ public class PropertiesLoader implements Loader {
 			}
 		});
 
-		readFiles(fig, files);
+		// Files
+		if (folder.getAbsolutePath().length() > parentPathLength) {
+			// Accounting for trailing slash (maybe should check if it's there first)
+			readFiles(fig, folder.getAbsolutePath().substring(parentPathLength + 1).split(File.separator), files);
+		} else {
+			readFiles(fig, null, files);
+		}
+
+		// Nested folders
+		FileFilter folderFilter = new FileFilter() {
+			public boolean accept(File file) {
+				return file.isDirectory();
+			}
+		};
+
+		File[] nestedFolders = folder.listFiles(folderFilter);
+		for (File nestedfolder : nestedFolders) {
+			readFolder(fig, nestedfolder);
+		}
 	}
 
-	protected void readFiles(Fig fig, File... files) {
+	protected void readFiles(Fig fig, String[] parents, File... files) {
 		for (File file : files) {
 			try {
 				ResourceBundle p = new PropertyResourceBundle(new FileInputStream(file));
@@ -59,10 +79,22 @@ public class PropertiesLoader implements Loader {
 					config.set(new Value<Object>(new String(key.getBytes("ISO-8859-1"), "UTF-8"), new String(p.getString(key).getBytes("ISO-8859-1"), "UTF-8"), false));
 				}
 
+				if (parents != null && parents.length > 0) {
+					levels = combine(parents, levels);
+				}
+
 				fig.add(config, levels);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private String[] combine(String[] one, String[] other) {
+		String[] combined = new String[one.length + other.length];
+		System.arraycopy(one, 0, combined, 0, one.length);
+		System.arraycopy(other, 0, combined, one.length, other.length);
+
+		return combined;
 	}
 }
