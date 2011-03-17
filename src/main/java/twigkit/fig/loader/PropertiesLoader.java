@@ -6,6 +6,7 @@ import twigkit.fig.Value;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -22,9 +23,12 @@ public class PropertiesLoader implements Loader {
 
 	public void load(Fig fig) {
 		try {
-			File f = new File(this.getClass().getClassLoader().getResource(path).toURI());
-			parentPathLength = f.getAbsolutePath().length();
-			readFolder(fig, f);
+			URL url = this.getClass().getClassLoader().getResource(path);
+			if (url != null) {
+				File f = new File(url.toURI());
+				parentPathLength = f.getAbsolutePath().length();
+				readFolder(fig, f);
+			}
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
