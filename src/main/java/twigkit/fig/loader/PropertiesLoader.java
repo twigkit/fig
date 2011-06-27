@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author mr.olafsson
@@ -23,7 +24,7 @@ public class PropertiesLoader implements Loader {
 
 	public void load(Fig fig) {
 		try {
-			URL url = this.getClass().getClassLoader().getResource(path);
+			URL url = getResource(path);
 			if (url != null) {
 				File f = new File(url.toURI());
 				parentPathLength = f.getAbsolutePath().length();
@@ -33,6 +34,15 @@ public class PropertiesLoader implements Loader {
 			e.printStackTrace();
 		}
 	}
+
+	private static URL getResource( String name ) {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        URL url = loader.getResource(name);
+        if (url == null) {
+            url = loader.getResource("/" + name);
+        }
+        return url;
+    }
 
 	protected void readFolder(Fig fig, File folder) {
 		FilenameFilter filter = new FilenameFilter() {
@@ -51,7 +61,7 @@ public class PropertiesLoader implements Loader {
 		// Files
 		if (folder.getAbsolutePath().length() > parentPathLength) {
 			// Accounting for trailing slash (maybe should check if it's there first)
-			readFiles(fig, folder.getAbsolutePath().substring(parentPathLength + 1).split(File.separator), files);
+			readFiles(fig, folder.getAbsolutePath().substring(parentPathLength + 1).split(Pattern.quote(File.separator)), files);
 		} else {
 			readFiles(fig, null, files);
 		}
@@ -86,7 +96,7 @@ public class PropertiesLoader implements Loader {
 				if (parents != null && parents.length > 0) {
 					levels = combine(parents, levels);
 				}
-
+				
 				fig.add(config, levels);
 			} catch (IOException e) {
 				e.printStackTrace();
