@@ -77,14 +77,13 @@ public class Fig {
 				add(new Config(path[0]));
 			}
 			Config parent = configs.get(path[0]);
-			for (int i = 1; i < path.length; i++) {
+			for (int i = 1; i < path.length - 1; i++) {
 				Config c = parent.extension(path[i]);
-				if (c != null) {
-					parent = c;
-				} else {
+				if (c == null && i < path.length) {
 					c = new Config(path[i]);
 					parent.extend_with(c);
 				}
+                parent = c;
 			}
 			parent.extend_with(config);
 		}
