@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>twigkit</groupId>
-	<artifactId>fig</artifactId>
-	<version>1.0</version>
-	<packaging>jar</packaging>
-	<name>fig</name>
-	<description>Configuration management for Java</description>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>twigkit</groupId>
+    <artifactId>fig</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+    <name>fig</name>
+    <description>Configuration management for Java</description>
 
-	<url>http://github.com/twigkit/fig</url>
+    <url>http://github.com/twigkit/fig</url>
 
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-	<organization>
-		<name>TwigKit</name>
-		<url>http://twigkit.com</url>
-	</organization>
+    <organization>
+        <name>TwigKit</name>
+        <url>http://twigkit.com</url>
+    </organization>
 
-	<developers>
-		<developer>
-			<id>mr.olafsson</id>
-			<name>Hjortur Stefan Olafsson</name>
-			<email>mr.olafsson@gmail.com</email>
-			<url>http://www.linkedin.com/in/mrolafsson/</url>
-			<organization>TwigKit</organization>
-			<organizationUrl>http://twigkit.com</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>0</timezone>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>mr.olafsson</id>
+            <name>Hjortur Stefan Olafsson</name>
+            <email>mr.olafsson@gmail.com</email>
+            <url>http://www.linkedin.com/in/mrolafsson/</url>
+            <organization>TwigKit</organization>
+            <organizationUrl>http://twigkit.com</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>0</timezone>
+        </developer>
+    </developers>
 
-	<issueManagement>
+    <issueManagement>
         <system>Github</system>
         <url>https://github.com/twigkit/fig/issues</url>
     </issueManagement>
@@ -58,39 +58,46 @@
 
     <repositories>
         <repository>
-            <id>twigkit.com</id>
-            <url>http://twigkit.com/artifactory/repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>repo.twigkit.com</id>
+            <name>TwigKit</name>
+            <url>http://repo.twigkit.com/twigkit</url>
             <releases>
                 <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
             </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>twigkit.com</id>
-            <url>http://twigkit.com/artifactory/twigkit</url>
+            <id>repo.twigkit.com-releases</id>
+            <name>TwigKit Releases</name>
+            <url>http://repo.twigkit.com/release</url>
         </repository>
         <snapshotRepository>
-            <id>twigkit.com</id>
-            <url>http://twigkit.com/artifactory/twigkit</url>
+            <id>repo.twigkit.com-snapshots</id>
+            <name>TwigKit Snapshots</name>
+            <url>http://repo.twigkit.com/snapshot</url>
+            <uniqueVersion>true</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
-
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
@@ -124,26 +131,26 @@
             </build>
         </profile>
     </profiles>
-    
-	<dependencies>
-		<!-- Logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.1</version>
-		</dependency>
 
-		<!-- Unit Testing -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+
+        <!-- Unit Testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
