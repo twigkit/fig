@@ -23,7 +23,22 @@ Usage
 
 #### From Properties files ####
 
-Given the following files:
+Given the following folder and file structure (where levels are determined by folders):
+
+    confs/
+        servers.conf
+         host = 127.0.0.1
+         port = 8080
+        servers/
+            email.conf
+             port = 25
+             protocol = imap
+            email/
+                secure-mail.conf
+                 port = 465
+                 security = ssl
+
+...or the following files (using underscore to separate levels in the hierarchy):
 
     confs/
         servers.conf
