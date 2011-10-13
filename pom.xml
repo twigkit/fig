@@ -7,7 +7,7 @@
     <version>1.0</version>
     <packaging>jar</packaging>
     <name>fig</name>
-    <description>Configuration management for Java</description>
+    <description>Hierarchical configuration management for Java</description>
 
     <url>http://github.com/twigkit/fig</url>
 
@@ -45,34 +45,11 @@
         <url>https://github.com/twigkit/fig/issues</url>
     </issueManagement>
 
-    <ciManagement>
-        <system>Hudson</system>
-        <url>http://twigkit.com/hudson/job/fig/</url>
-    </ciManagement>
-
     <scm>
         <connection>scm:git:git://github.com/TwigKit/fig.git</connection>
         <developerConnection>scm:git:git@github.com:twigkit/fig.git</developerConnection>
         <url>https://github.com/twigkit/fig</url>
     </scm>
-
-    <repositories>
-        <repository>
-            <id>repo.twigkit.com</id>
-            <name>TwigKit</name>
-            <url>http://repo.twigkit.com/twigkit</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <distributionManagement>
         <repository>
@@ -87,10 +64,12 @@
             <uniqueVersion>true</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
@@ -98,39 +77,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>hudson</id>
-            <activation>
-                <property>
-                    <name>BUILD_NUMBER</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <version>2.4</version>
-                        <configuration>
-                            <formats>
-                                <format>xml</format>
-                            </formats>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>cobertura</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <dependencies>
         <!-- Logging -->
