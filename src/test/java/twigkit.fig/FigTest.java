@@ -52,6 +52,10 @@ public class FigTest {
         Config config = fig.find("does-not-exist");
         assertNull(config);
 
+        config = fig.get("elements");
+        assertNotNull(config);
+        assertEquals(1869, config.value("year").as_int());
+
         config = fig.find("extension-1-2");
         assertNotNull(config);
 

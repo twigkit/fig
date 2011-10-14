@@ -15,27 +15,33 @@ import java.util.regex.Pattern;
  */
 public class PropertiesLoader implements Loader {
 
-	private String path;
-	private int parentPathLength;
+    public static final String FILE_EXTENSION = ".conf";
+    public static final String LEVEL_SEPARATOR = "_";
 
-	public PropertiesLoader(String path) {
-		this.path = path;
-	}
+    public static final String ISO_8859_1 = "ISO-8859-1";
+    public static final String UTF_8 = "UTF-8";
 
-	public void load(Fig fig) {
-		try {
-			URL url = getResource(path);
-			if (url != null) {
-				File f = new File(url.toURI());
-				parentPathLength = f.getAbsolutePath().length();
-				readFolder(fig, f);
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-	}
+    private String path;
+    private int parentPathLength;
 
-	private static URL getResource( String name ) {
+    public PropertiesLoader(String path) {
+        this.path = path;
+    }
+
+    public void load(Fig fig) {
+        try {
+            URL url = getResource(path);
+            if (url != null) {
+                File f = new File(url.toURI());
+                parentPathLength = f.getAbsolutePath().length();
+                readFolder(fig, f);
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static URL getResource(String name) {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(name);
         if (url == null) {
@@ -44,71 +50,86 @@ public class PropertiesLoader implements Loader {
         return url;
     }
 
-	protected void readFolder(Fig fig, File folder) {
-		FilenameFilter filter = new FilenameFilter() {
-			public boolean accept(File file, String s) {
-				return s.endsWith(".conf");
-			}
-		};
+    protected void readFolder(Fig fig, final File folder) {
+        // If there is a configuration file with the same name as the folder, then add that first
+        File conf = new File(folder, folder.getName() + FILE_EXTENSION);
+        if (conf.isFile()) {
+            if (parentPathLength < folder.getParentFile().getAbsolutePath().length()) {
+                fromProperties(fig, folder.getParentFile().getAbsolutePath().substring(parentPathLength + 1).split(Pattern.quote(File.separator)), conf);
+            } else {
+                fromProperties(fig, null, conf);
+            }
+        }
 
-		File[] files = folder.listFiles(filter);
-		Arrays.sort(files, new Comparator<File>() {
-			public int compare(File file, File file1) {
-				return file.getName().compareTo(file1.getName());
-			}
-		});
+        FilenameFilter filter = new FilenameFilter() {
+            public boolean accept(File file, String s) {
+                // All files except the one with the same name as the folder
+                return s.endsWith(FILE_EXTENSION) && !s.substring(0, s.length() - FILE_EXTENSION.length()).equals(folder.getName());
+            }
+        };
 
-		// Files
-		if (folder.getAbsolutePath().length() > parentPathLength) {
-			// Accounting for trailing slash (maybe should check if it's there first)
-			readFiles(fig, folder.getAbsolutePath().substring(parentPathLength + 1).split(Pattern.quote(File.separator)), files);
-		} else {
-			readFiles(fig, null, files);
-		}
+        File[] files = folder.listFiles(filter);
+        Arrays.sort(files, new Comparator<File>() {
+            public int compare(File file, File file1) {
+                return file.getName().compareTo(file1.getName());
+            }
+        });
 
-		// Nested folders
-		FileFilter folderFilter = new FileFilter() {
-			public boolean accept(File file) {
-				return file.isDirectory();
-			}
-		};
+        // Files
+        if (folder.getAbsolutePath().length() > parentPathLength) {
+            // Accounting for trailing slash (maybe should check if it's there first)
+            readFiles(fig, folder, folder.getAbsolutePath().substring(parentPathLength + 1).split(Pattern.quote(File.separator)), files);
+        } else {
+            readFiles(fig, folder, null, files);
+        }
 
-		File[] nestedFolders = folder.listFiles(folderFilter);
-		for (File nestedfolder : nestedFolders) {
-			readFolder(fig, nestedfolder);
-		}
-	}
+        // Nested folders
+        FileFilter folderFilter = new FileFilter() {
+            public boolean accept(File file) {
+                return file.isDirectory();
+            }
+        };
 
-	protected void readFiles(Fig fig, String[] parents, File... files) {
-		for (File file : files) {
-			try {
-				ResourceBundle p = new PropertyResourceBundle(new FileInputStream(file));
-				String[] levels = file.getName().substring(0, file.getName().lastIndexOf(".")).split("_");
+        File[] nestedFolders = folder.listFiles(folderFilter);
+        for (File nestedFolder : nestedFolders) {
+            readFolder(fig, nestedFolder);
+        }
+    }
 
-				Config config = new Config(levels[levels.length - 1]);
+    protected void readFiles(Fig fig, File folder, String[] parents, File... files) {
+        for (File file : files) {
+            fromProperties(fig, parents, file);
+        }
+    }
 
-				Enumeration<String> keys = p.getKeys();
-				while (keys.hasMoreElements()) {
-					String key = keys.nextElement();
-					config.set(new Value<Object>(new String(key.getBytes("ISO-8859-1"), "UTF-8"), new String(p.getString(key).getBytes("ISO-8859-1"), "UTF-8"), false));
-				}
+    private void fromProperties(Fig fig, String[] parents, File file) {
+        try {
+            ResourceBundle p = new PropertyResourceBundle(new FileInputStream(file));
+            String[] levels = file.getName().substring(0, file.getName().lastIndexOf(FILE_EXTENSION.substring(0, 1))).split(LEVEL_SEPARATOR);
 
-				if (parents != null && parents.length > 0) {
-					levels = combine(parents, levels);
-				}
-				
-				fig.add(config, levels);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+            Config config = new Config(levels[levels.length - 1]);
 
-	private String[] combine(String[] one, String[] other) {
-		String[] combined = new String[one.length + other.length];
-		System.arraycopy(one, 0, combined, 0, one.length);
-		System.arraycopy(other, 0, combined, one.length, other.length);
+            Enumeration<String> keys = p.getKeys();
+            while (keys.hasMoreElements()) {
+                String key = keys.nextElement();
+                config.set(new Value<Object>(new String(key.getBytes(ISO_8859_1), UTF_8), new String(p.getString(key).getBytes(ISO_8859_1), UTF_8), false));
+            }
 
-		return combined;
-	}
+            if (parents != null && parents.length > 0) {
+                levels = combine(parents, levels);
+            }
+
+            fig.add(config, levels);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String[] combine(String[] one, String[] other) {
+        String[] combined = new String[one.length + other.length];
+        System.arraycopy(one, 0, combined, 0, one.length);
+        System.arraycopy(other, 0, combined, one.length, other.length);
+
+        return combined;
+    }
 }
