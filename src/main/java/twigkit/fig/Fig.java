@@ -113,7 +113,11 @@ public class Fig {
 			return c;
 		} else {
 			for (int i = 1; i < name.length; i++) {
-				c = c.extension(name[i]);
+				if (c != null) {
+                    c = c.extension(name[i]);
+                } else {
+                    return null;
+                }
 			}
 			return c;
 		}
