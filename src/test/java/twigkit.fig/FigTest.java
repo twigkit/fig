@@ -1,14 +1,11 @@
 package twigkit.fig;
 
-import org.junit.Assert;
 import org.junit.Test;
 import twigkit.fig.loader.PropertiesLoader;
 import twigkit.fig.sample.InjectedSample;
 import twigkit.fig.visitor.ConfigTreeWriter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * @author mr.olafsson
@@ -63,7 +60,13 @@ public class FigTest {
         assertNotNull(config);
     }
 
-	@Test
+    @Test
+    public void testKeysOnly() throws Exception {
+        Fig fig = Fig.load(new PropertiesLoader("folders"));
+        new ConfigTreeWriter(fig.get("folder", "keys-only"));
+    }
+
+    @Test
 	public void testLoadSubFolder() {
 		Fig fig = Fig.load(new PropertiesLoader("confs/sub"));
 
