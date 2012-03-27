@@ -40,7 +40,7 @@ public class InjectionConfigurator implements Configurator<Object> {
 
                 field.setAccessible(true);
 
-                if (config == null && fig != null && !annotation.with().equals("")) {
+                if (fig != null && !annotation.with().equals("")) {
                     config = fig.get(annotation.with().split(Configure.SEPARATOR));
                 }
 
@@ -57,8 +57,12 @@ public class InjectionConfigurator implements Configurator<Object> {
                     name = field.getName();
                 }
 
+                if (fig != null && !annotation.with().equals("")) {
+                    config = fig.get(annotation.with().split(Configure.SEPARATOR));
+                }
+
                 Value value = config.value(name);
-                if (value != null) {
+                if (value.get() != null) {
                     field.setAccessible(true);
                     try {
                         field.set(target, value.get());

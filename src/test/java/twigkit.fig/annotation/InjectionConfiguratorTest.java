@@ -52,7 +52,9 @@ public class InjectionConfiguratorTest {
             @Override
             public void validate() {
                 assertNotNull(config);
-                config.value("l2").as_string().equals("v2");
+                assertEquals("v2", config.value("l2").as_string());
+                assertEquals("v2", value);
+
             }
         };
 

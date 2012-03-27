@@ -12,13 +12,14 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Configure {
 
-    public static String SEPARATOR = ",";
+    public static String SEPARATOR = "\\.";
 
     String with() default "";
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.FIELD})
     public @interface Value {
+        String with() default "";
         String name() default "";
     }
 }
