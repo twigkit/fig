@@ -2,7 +2,9 @@ package twigkit.fig.annotation;
 
 import org.junit.Test;
 import twigkit.fig.Config;
+import twigkit.fig.Fig;
 import twigkit.fig.sample.InjectedSample;
+import twigkit.fig.sample.InjectedWithSample;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,6 +32,31 @@ public class InjectionConfiguratorTest {
         };
 
         new InjectionConfigurator(config).configure(sample);
+
+        sample.validate();
+    }
+
+    @Test
+    public void testAnnotationWith() {
+        final Fig fig = new Fig();
+        fig.add(fig.create("level_1").set("l1", "v1").extend_with(
+                Fig.create("level_2").set("l2", "v2").extend_with(
+                        Fig.create("level_3").set("l3", "v3")
+                )
+            )
+        );
+
+        assertNotNull(fig);
+
+        InjectedWithSample sample = new InjectedWithSample() {
+            @Override
+            public void validate() {
+                assertNotNull(config);
+                config.value("l2").as_string().equals("v2");
+            }
+        };
+
+        new InjectionConfigurator(fig).configure(sample);
 
         sample.validate();
     }

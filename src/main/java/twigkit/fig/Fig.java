@@ -1,5 +1,6 @@
 package twigkit.fig;
 
+import twigkit.fig.annotation.InjectionConfigurator;
 import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigFinder;
 
@@ -146,6 +147,17 @@ public class Fig {
 
 		return config;
 	}
+
+    /**
+     * Use Fig to configure object that have been annotated with {@link twigkit.fig.annotation.Configure#with()} specifying
+     * which {@link Config} to use.
+     *
+     * @param target
+     * @return
+     */
+    public Object configure(Object target) {
+        return new InjectionConfigurator(this).configure(target);
+    }
 
 	/**
 	 * Configure objects that implement {@link twigkit.fig.configurable.Configurable} or use

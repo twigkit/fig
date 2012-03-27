@@ -16,7 +16,7 @@ public class InterfaceConfigurator implements Configurator<Configurable> {
 
     public Configurable configure(Configurable configurable) {
         configurable.configure(config);
-        
+
         return configurable;
     }
 }

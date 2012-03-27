@@ -12,6 +12,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Configure {
 
+    public static String SEPARATOR = ",";
+
     String with() default "";
 
     @Retention(RetentionPolicy.RUNTIME)

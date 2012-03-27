@@ -2,8 +2,10 @@ package twigkit.fig.annotation;
 
 import twigkit.fig.Config;
 import twigkit.fig.Configurator;
+import twigkit.fig.Fig;
 import twigkit.fig.Value;
 import twigkit.fig.util.ReflectionUtils;
+import twigkit.fig.visitor.ConfigTreeWriter;
 
 import java.lang.reflect.Field;
 
@@ -12,7 +14,12 @@ import java.lang.reflect.Field;
  */
 public class InjectionConfigurator implements Configurator<Object> {
 
+    private Fig fig;
     private Config config;
+
+    public InjectionConfigurator(Fig fig) {
+        this.fig = fig;
+    }
 
     public InjectionConfigurator(Config config) {
         this.config = config;
@@ -20,7 +27,7 @@ public class InjectionConfigurator implements Configurator<Object> {
 
     public Object configure(Object target) {
         inject(target);
-        
+
         return target;
     }
 
@@ -32,6 +39,11 @@ public class InjectionConfigurator implements Configurator<Object> {
                 Configure annotation = field.getAnnotation(Configure.class);
 
                 field.setAccessible(true);
+
+                if (config == null && fig != null && !annotation.with().equals("")) {
+                    config = fig.get(annotation.with().split(Configure.SEPARATOR));
+                }
+
                 try {
                     field.set(target, config);
                 } catch (IllegalAccessException e) {
