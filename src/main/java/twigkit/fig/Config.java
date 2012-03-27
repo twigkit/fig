@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * 
  * @author mr.olafsson
  */
 public class Config implements Serializable {
@@ -35,21 +34,21 @@ public class Config implements Serializable {
 
     /**
      * Get a {@link Value} from this {@link Config} by label.
-     * 
+     *
      * @param name
      * @return
      */
     public Value value(String name) {
-		if (has(name)) {
-			return values.get(name);
-		}
-	    for (Config conf : parents()) {
+        if (has(name)) {
+            return values.get(name);
+        }
+        for (Config conf : parents()) {
             if (conf.has(name)) {
-	            return conf.value(name);
+                return conf.value(name);
             }
         }
 
-	    return new Value(name, null);
+        return new Value(name, null);
     }
 
     /**
@@ -76,7 +75,7 @@ public class Config implements Serializable {
 
     /**
      * Set multiple {@link Value}s for this {@link Config}.
-     * 
+     *
      * @param values
      * @return
      */
@@ -87,15 +86,15 @@ public class Config implements Serializable {
         return this;
     }
 
-	/**
-	 * Check if a {@link Value} is locally set for the given name (key).
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public boolean has(String name) {
-		return values.containsKey(name);
-	}
+    /**
+     * Check if a {@link Value} is locally set for the given name (key).
+     *
+     * @param name
+     * @return
+     */
+    public boolean has(String name) {
+        return values.containsKey(name);
+    }
 
     /**
      * Get an extension of this {@link Config} by name ({@link Config#name()}. Retrieve {@link Config} extensions further
@@ -119,7 +118,7 @@ public class Config implements Serializable {
 
     /**
      * Add a {@link Config} as an extension to this one.
-     * 
+     *
      * @param configuration
      * @return
      */
@@ -133,40 +132,68 @@ public class Config implements Serializable {
 
     /**
      * Get all {@link Config}s that extend this one.
+     *
      * @return
      */
     public Collection<Config> extensions() {
         return extensions.values();
     }
 
-	/**
-	 * Get all {@link twigkit.fig.Value}s for this {@link Config} as a {@link Map<String, Value>}. If this {@link Config} extends others, it will
+    /**
+     * Get all {@link twigkit.fig.Value}s for this {@link Config} as a {@link Map<String, Value>}. If this {@link Config} extends others, it will
      * include and override any values from the parents.
-	 *
-	 * @return
-	 */
-	public Map<String, Value> map() {
-		Map<String, Value> combined = new LinkedHashMap<String, Value>();
-        for (Config conf : parents()) {
-            combined.putAll(conf.values);
+     *
+     * @return
+     */
+    public Map<String, Value> map() {
+        return map(true);
+    }
+
+    /**
+     * Get all {@link twigkit.fig.Value}s for this {@link Config} as a {@link Map<String, Value>}. If this {@link Config}
+     * extends others and {@link #map(boolean)} parameter is true, it will include and override any values
+     * from the parents.
+     *
+     * @param inherit
+     * @return
+     */
+    public Map<String, Value> map(boolean inherit) {
+        if (inherit) {
+            Map<String, Value> combined = new LinkedHashMap<String, Value>();
+            for (Config conf : parents()) {
+                combined.putAll(conf.values);
+            }
+            combined.putAll(values);
+            return combined;
+        } else {
+            return values;
         }
-        combined.putAll(values);
-        return combined;
-	}
+    }
 
     /**
      * Get all {@link twigkit.fig.Value}s for this {@link Config}. If this {@link Config} extends others, it will
      * include and override any values from the parents.
-     * 
+     *
      * @return
      */
     public Collection<Value> values() {
-       return map().values();
+        return values(true);
+    }
+
+    /**
+     * Get all {@link twigkit.fig.Value}s for this {@link Config}. If this {@link Config} extends others and
+     * {@link #map(boolean)} parameter is true, it will include and override any values from the parents.
+     *
+     * @param inherit
+     * @return
+     */
+    public Collection<Value> values(boolean inherit) {
+        return map(inherit).values();
     }
 
     /**
      * Get all parent {@link Config}s.
-     * 
+     *
      * @return
      */
     public List<Config> parents() {
@@ -175,7 +202,7 @@ public class Config implements Serializable {
 
     /**
      * Add a {@link Config} as a parent.
-     * 
+     *
      * @param parent
      * @return
      */
@@ -186,7 +213,7 @@ public class Config implements Serializable {
 
     /**
      * Accept a {@link ConfigVisitor}.
-     * 
+     *
      * @param visitor
      */
     public void accept(ConfigVisitor visitor) {

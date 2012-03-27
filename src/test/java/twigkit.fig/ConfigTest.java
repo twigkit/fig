@@ -5,9 +5,11 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
- * 
  * @author mr.olafsson
  */
 public class ConfigTest {
@@ -33,7 +35,7 @@ public class ConfigTest {
 
         return root;
     }
-    
+
     @Test
     public void createConfiguration() {
         Config conf = new Config("level1");
@@ -56,11 +58,11 @@ public class ConfigTest {
         Assert.assertEquals(3, config.extension("extension-1").values().size());
         Assert.assertEquals(4, config.extension("extension-1").extension("extension-1-1").values().size());
 
-	    // Overridden value
-	    Assert.assertEquals("root-1-value-override", config.extension("extension-2", "extension-2-1").value("root-1-key").as_string());
+        // Overridden value
+        Assert.assertEquals("root-1-value-override", config.extension("extension-2", "extension-2-1").value("root-1-key").as_string());
 
-	    // Inherited value
-	    Assert.assertEquals("root-2-value", config.extension("extension-2", "extension-2-1").value("root-2-key").as_string());
+        // Inherited value
+        Assert.assertEquals("root-2-value", config.extension("extension-2", "extension-2-1").value("root-2-key").as_string());
     }
 
     @Test
@@ -73,6 +75,16 @@ public class ConfigTest {
         Config config = new Config("test");
         config.set(values);
 
-        Assert.assertEquals(3, config.values().size());
+        assertEquals(3, config.values().size());
+    }
+
+    @Test
+    public void testMap() throws Exception {
+        Config conf = sample();
+        Map<String, Value> map = conf.extension("extension-1", "extension-1-1").map(true);
+        assertEquals(4, map.size());
+
+        map = conf.extension("extension-1", "extension-1-1").map(false);
+        assertEquals(2, map.size());
     }
 }
