@@ -51,6 +51,24 @@
         <url>https://github.com/twigkit/fig</url>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>repo.twigkit.com</id>
+            <name>TwigKit</name>
+            <url>http://repo.twigkit.com/repo</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <distributionManagement>
         <repository>
             <id>repo.twigkit.com-releases</id>
