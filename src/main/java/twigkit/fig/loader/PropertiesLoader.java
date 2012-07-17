@@ -1,5 +1,7 @@
 package twigkit.fig.loader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.Value;
@@ -14,6 +16,8 @@ import java.util.regex.Pattern;
  * @author mr.olafsson
  */
 public class PropertiesLoader implements Loader {
+
+    private static final Logger logger = LoggerFactory.getLogger(PropertiesLoader.class);
 
     public static final String FILE_EXTENSION = ".conf";
     public static final String LEVEL_SEPARATOR = "_";
@@ -37,7 +41,7 @@ public class PropertiesLoader implements Loader {
                 readFolder(fig, f);
             }
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            logger.error("Failed to load Config", e);
         }
     }
 
@@ -121,7 +125,7 @@ public class PropertiesLoader implements Loader {
 
             fig.add(config, levels);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load Config from Properties", e);
         }
     }
 

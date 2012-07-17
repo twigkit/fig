@@ -1,5 +1,7 @@
 package twigkit.fig.annotation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
 import twigkit.fig.Configurator;
 import twigkit.fig.Fig;
@@ -13,6 +15,8 @@ import java.lang.reflect.Field;
  * @author mr.olafsson
  */
 public class InjectionConfigurator implements Configurator<Object> {
+
+    private static final Logger logger = LoggerFactory.getLogger(InjectionConfigurator.class);
 
     private Fig fig;
     private Config config;
@@ -47,7 +51,7 @@ public class InjectionConfigurator implements Configurator<Object> {
                 try {
                     field.set(target, config);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    logger.error("Failed to configure field", e);
                 }
             } else if (field.isAnnotationPresent(Configure.Value.class)) {
                 Configure.Value annotation = field.getAnnotation(Configure.Value.class);
@@ -67,7 +71,7 @@ public class InjectionConfigurator implements Configurator<Object> {
                     try {
                         field.set(target, value.get());
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        logger.error("Failed to configure value", e);
                     }
                 }
             }

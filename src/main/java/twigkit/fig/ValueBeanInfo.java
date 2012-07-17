@@ -1,5 +1,8 @@
 package twigkit.fig;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
@@ -8,6 +11,8 @@ import java.beans.SimpleBeanInfo;
  * @author mr.olafsson
  */
 public class ValueBeanInfo extends SimpleBeanInfo {
+
+    private static final Logger logger = LoggerFactory.getLogger(ValueBeanInfo.class);
 
 	@Override
 	public PropertyDescriptor[] getPropertyDescriptors() {
@@ -25,7 +30,7 @@ public class ValueBeanInfo extends SimpleBeanInfo {
 			desc[9] = new PropertyDescriptor("require", Value.class, "require", null); // Is a setter for required
 			desc[10] = new PropertyDescriptor("class", Value.class, "getClass", null);
 		} catch (IntrospectionException e) {
-			e.printStackTrace();
+			logger.error("Failed to map Value to BeanInfo", e);
 		}
 
 		return desc;
