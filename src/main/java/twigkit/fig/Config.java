@@ -1,7 +1,9 @@
 package twigkit.fig;
 
+import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigVisitor;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -14,13 +16,19 @@ public class Config implements Serializable {
     private List<Config> parents;
     private Map<String, Config> extensions;
     private Map<String, Value> values;
+    private Loader loader;
 
     public Config(String name) {
+        this(name, null);
+    }
+
+    public Config(String name, Loader loader) {
         super();
         this.name = name;
         this.parents = new ArrayList<Config>();
         this.extensions = new LinkedHashMap<String, Config>();
         this.values = new LinkedHashMap<String, Value>();
+        this.loader = loader;
     }
 
     /**
@@ -200,6 +208,10 @@ public class Config implements Serializable {
         return parents;
     }
 
+    public Config parent() {
+        return parents().get(parents().size() - 1);
+    }
+
     /**
      * Add a {@link Config} as a parent.
      *
@@ -211,6 +223,16 @@ public class Config implements Serializable {
         return this;
     }
 
+    public String path() {
+        StringBuilder buf = new StringBuilder();
+        for (Config parent : parents()) {
+            buf.append("/");
+            buf.append(parent.name());
+        }
+        buf.append("/");
+        buf.append(name());
+        return buf.toString();
+    }
     /**
      * Accept a {@link ConfigVisitor}.
      *
@@ -225,5 +247,37 @@ public class Config implements Serializable {
             visitor.extension(extension);
             extension.accept(visitor);
         }
+    }
+
+    public boolean write() {
+        try {
+            loader.write(this);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Config)) return false;
+
+        Config config = (Config) o;
+
+        if (name != null ? !name.equals(config.name) : config.name != null) return false;
+        if (parents != null ? !parents.equals(config.parents) : config.parents != null) return false;
+        if (values != null ? !values.equals(config.values) : config.values != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (parents != null ? parents.hashCode() : 0);
+        result = 31 * result + (values != null ? values.hashCode() : 0);
+        return result;
     }
 }

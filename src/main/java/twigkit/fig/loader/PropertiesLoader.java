@@ -28,17 +28,22 @@ public class PropertiesLoader implements Loader {
     private String path;
     private int parentPathLength;
 
+    private File rootFolder;
+
+    private Map<String, File> filePaths;
+
     public PropertiesLoader(String path) {
         this.path = path;
+        filePaths = new HashMap<String, File>();
     }
 
     public void load(Fig fig) {
         try {
             URL url = getResource(path);
             if (url != null) {
-                File f = new File(url.toURI());
-                parentPathLength = f.getAbsolutePath().length();
-                readFolder(fig, f);
+                rootFolder = new File(url.toURI());
+                parentPathLength = rootFolder.getAbsolutePath().length();
+                readFolder(fig, rootFolder);
             }
         } catch (URISyntaxException e) {
             logger.error("Failed to load Config", e);
@@ -111,7 +116,7 @@ public class PropertiesLoader implements Loader {
             ResourceBundle p = new PropertyResourceBundle(new FileInputStream(file));
             String[] levels = file.getName().substring(0, file.getName().lastIndexOf(FILE_EXTENSION.substring(0, 1))).split(LEVEL_SEPARATOR);
 
-            Config config = new Config(levels[levels.length - 1]);
+            Config config = new Config(levels[levels.length - 1], this);
 
             Enumeration<String> keys = p.getKeys();
             while (keys.hasMoreElements()) {
@@ -124,9 +129,50 @@ public class PropertiesLoader implements Loader {
             }
 
             fig.add(config, levels);
+            // Keeping a reference to the source file
+            filePaths.put(config.path(), file);
         } catch (IOException e) {
             logger.error("Failed to load Config from Properties", e);
         }
+    }
+
+    /**
+     * Write the Config back to the file that backs it.
+     *
+     * @param config
+     * @throws IOException
+     */
+    public void write(Config config) throws IOException {
+        File file = fileForConfig(config);
+        if (file != null) {
+            write(config, file);
+        }
+    }
+
+    protected void write(Config config, File file) throws IOException {
+        Writer out = null;
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+            for (Value val : config.values(false)) {
+                out.write(val.label() + ": " + val.as_string());
+                out.write("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    protected File fileForConfig(Config config) {
+        return filePaths.get(config.path());
     }
 
     private String[] combine(String[] one, String[] other) {

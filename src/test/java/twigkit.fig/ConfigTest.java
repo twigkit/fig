@@ -2,6 +2,7 @@ package twigkit.fig;
 
 import org.junit.Assert;
 import org.junit.Test;
+import twigkit.fig.visitor.ConfigTreeWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,5 +87,13 @@ public class ConfigTest {
 
         map = conf.extension("extension-1", "extension-1-1").map(false);
         assertEquals(2, map.size());
+    }
+
+    @Test
+    public void testPath() throws Exception {
+        Config conf = sample();
+        new ConfigTreeWriter(conf);
+        String path = conf.extension("extension-1", "extension-1-1", "extension-1-1-1").path();
+        System.out.println(path);
     }
 }

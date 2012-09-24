@@ -4,6 +4,7 @@ import twigkit.fig.annotation.InjectionConfigurator;
 import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigFinder;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -181,4 +182,8 @@ public class Fig {
 	public static GenericConfigurator with(Config config) {
 		return new GenericConfigurator(config);
 	}
+
+    public void write(Config config) throws IOException {
+
+    }
 }

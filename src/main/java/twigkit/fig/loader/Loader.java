@@ -1,6 +1,9 @@
 package twigkit.fig.loader;
 
+import twigkit.fig.Config;
 import twigkit.fig.Fig;
+
+import java.io.IOException;
 
 /**
  * @author mr.olafsson
@@ -8,5 +11,7 @@ import twigkit.fig.Fig;
 public interface Loader {
 
     public void load(Fig configs);
+
+    public void write(Config config) throws IOException;
 
 }
