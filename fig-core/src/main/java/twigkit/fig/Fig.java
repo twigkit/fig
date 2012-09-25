@@ -76,7 +76,7 @@ public class Fig {
 			configs.put(config.name(), config);
 		} else {
 			if (!configs.containsKey(path[0])) {
-				add(new Config(path[0]));
+				add(new Config(path[0], config.loader));
 			}
 			Config parent = configs.get(path[0]);
 			for (int i = 1; i < path.length - 1; i++) {

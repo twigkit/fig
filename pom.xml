@@ -5,8 +5,7 @@
     <groupId>twigkit</groupId>
     <artifactId>fig</artifactId>
     <version>1.3-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>fig</name>
+    <packaging>pom</packaging>
     <description>Hierarchical configuration management for Java</description>
 
     <url>http://github.com/twigkit/fig</url>
@@ -95,6 +94,11 @@
             </plugin>
         </plugins>
     </build>
+
+    <modules>
+        <module>fig-core</module>
+        <module>fig-jsp</module>
+    </modules>
 
     <dependencies>
         <!-- Logging -->

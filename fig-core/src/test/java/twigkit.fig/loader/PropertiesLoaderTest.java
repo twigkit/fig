@@ -5,8 +5,6 @@ import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.visitor.ConfigTreeWriter;
 
-import java.io.File;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -56,5 +54,40 @@ public class PropertiesLoaderTest {
 
         new ConfigTreeWriter(changed);
 
+        Config newExistingFolder = new Config("more-override");
+        newExistingFolder.set("new-file", "new-value");
+        changed.extend_with(newExistingFolder);
+        loader.write(newExistingFolder);
+
+        new ConfigTreeWriter(changed);
+
+        Config newFolder = new Config("i-do-not-exist");
+        newFolder.set("new-folder", "with-a-value");
+        parent.parent().extend_with(newFolder);
+        loader.write(newFolder);
+
+        Config newFile = new Config("i-also-do-not-exist");
+        newFile.set("new-file-in-new", "folder");
+        newFolder.extend_with(newFile);
+//        loader.write(newFile);
+        newFile.save();
+
+        new ConfigTreeWriter(newFile);
+
+        Config newFolderNoFile = new Config("i-will-not-exist");
+        parent.parent().extend_with(newFolderNoFile);
+
+        Config newFileInFolder = new Config("i-also-do-not-exist");
+        newFileInFolder.set("new-file-in-", "folder-with-no-config");
+        newFolderNoFile.extend_with(newFileInFolder);
+//        loader.write(newFileInFolder);
+        newFileInFolder.save();
+
+        new ConfigTreeWriter(newFile);
+
+        System.out.println("FINAL STRUCTURE");
+
+        fig = Fig.load(new PropertiesLoader("writables"));
+        new ConfigTreeWriter(fig.get("files"));
     }
 }

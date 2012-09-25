@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+      http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+		version="2.1">
+	<tlib-version>1.0</tlib-version>
+	<short-name>fig</short-name>
+	<uri>/fig</uri>
+
+	<tag>
+		<description>
+			Create a Fig instance loading the specified set of Configs.
+		</description>
+		<name>config</name>
+		<tag-class>twigkit.fig.jsp.ConfigTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>Variable name for this configuration.</description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Name of configs to load.</description>
+			<name>from</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Name of configuration to get.</description>
+			<name>load</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<function>
+		<name>load</name>
+		<function-class>
+			twigkit.fig.jsp.Functions
+		</function-class>
+		<function-signature>
+			twigkit.fig.Fig load(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<name>get</name>
+		<function-class>
+			twigkit.fig.jsp.Functions
+		</function-class>
+		<function-signature>
+			twigkit.fig.Config get(twigkit.fig.Fig,java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<name>value</name>
+		<function-class>
+			twigkit.fig.jsp.Functions
+		</function-class>
+		<function-signature>
+			twigkit.fig.Value value(twigkit.fig.Config,java.lang.String)
+		</function-signature>
+	</function>
+</taglib>

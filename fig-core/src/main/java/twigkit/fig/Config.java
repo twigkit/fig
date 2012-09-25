@@ -16,7 +16,7 @@ public class Config implements Serializable {
     private List<Config> parents;
     private Map<String, Config> extensions;
     private Map<String, Value> values;
-    private Loader loader;
+    protected Loader loader;
 
     public Config(String name) {
         this(name, null);
@@ -133,6 +133,7 @@ public class Config implements Serializable {
     public Config extend_with(Config configuration) {
         configuration.parents().addAll(parents());
         configuration.parent(this);
+        configuration.loader = loader;
 
         extensions.put(configuration.name(), configuration);
         return this;
@@ -249,7 +250,7 @@ public class Config implements Serializable {
         }
     }
 
-    public boolean write() {
+    public boolean save() {
         try {
             loader.write(this);
             return true;
