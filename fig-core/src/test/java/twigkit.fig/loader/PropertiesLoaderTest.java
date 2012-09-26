@@ -1,17 +1,28 @@
 package twigkit.fig.loader;
 
+import org.junit.Before;
 import org.junit.Test;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.visitor.ConfigTreeWriter;
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author mr.olafsson
  */
 public class PropertiesLoaderTest {
+
+    private ClassLoader cl;
+
+    @Before
+    public void setUp() throws Exception {
+        cl = Thread.currentThread().getContextClassLoader();
+    }
 
     @Test
     public void testLoadingFolderWithoutParentConf() throws Exception {
@@ -32,17 +43,13 @@ public class PropertiesLoaderTest {
         assertNotNull(conf);
         assertEquals(2, conf.values().size());
 
-        new ConfigTreeWriter(conf);
-
         conf.set("new", "new-value");
-
         loader.write(conf);
 
+        // Reloading the configuration
         fig = Fig.load(new PropertiesLoader("writables"));
         Config changed = fig.get("files", "writable", "override");
         assertEquals(3, changed.values().size());
-
-        new ConfigTreeWriter(changed);
 
         Config parent = changed.parent();
         parent.set("new-value", "in-parent");
@@ -52,42 +59,75 @@ public class PropertiesLoaderTest {
         changed = fig.get("files", "writable", "override");
         assertEquals(4, changed.values().size());
 
-        new ConfigTreeWriter(changed);
-
         Config newExistingFolder = new Config("more-override");
         newExistingFolder.set("new-file", "new-value");
         changed.extend_with(newExistingFolder);
         loader.write(newExistingFolder);
+        assertTrue(getFile("writables", "files", "writable_override_more-override.conf").exists());
+        assertTrue(getFile("writables", "files", "writable_override_more-override.conf").isFile());
+    }
 
-        new ConfigTreeWriter(changed);
+    @Test
+    public void testNewSiblingConfiguration() throws Exception {
+        Fig fig = Fig.load(new PropertiesLoader("writables"));
+        Config parent = fig.get("files", "writable");
 
         Config newFolder = new Config("i-do-not-exist");
         newFolder.set("new-folder", "with-a-value");
         parent.parent().extend_with(newFolder);
-        loader.write(newFolder);
+        newFolder.save();
+
+        // Since we saved the parent configuration a file is created (because it has no extensions yet)
+        assertTrue(getFile("writables", "files", "i-do-not-exist.conf").exists());
+        assertTrue(getFile("writables", "files", "i-do-not-exist.conf").isFile());
 
         Config newFile = new Config("i-also-do-not-exist");
         newFile.set("new-file-in-new", "folder");
         newFolder.extend_with(newFile);
-//        loader.write(newFile);
         newFile.save();
 
-        new ConfigTreeWriter(newFile);
+        // The parent exists as a file so this will be a sibling file override (with LEVEL_SEPARATOR)
+        assertTrue(getFile("writables", "files", "i-do-not-exist_i-also-do-not-exist.conf").exists());
+        assertTrue(getFile("writables", "files", "i-do-not-exist_i-also-do-not-exist.conf").isFile());
+    }
 
+    @Test
+    public void testNewConfigurationFileInNewDirectory() throws Exception {
+        Fig fig = Fig.load(new PropertiesLoader("writables"));
+        Config parent = fig.get("files", "writable");
+
+        // If no sibling config file exists to override and an extension is made then create directory with config file
         Config newFolderNoFile = new Config("i-will-not-exist");
         parent.parent().extend_with(newFolderNoFile);
 
         Config newFileInFolder = new Config("i-also-do-not-exist");
         newFileInFolder.set("new-file-in-", "folder-with-no-config");
         newFolderNoFile.extend_with(newFileInFolder);
-//        loader.write(newFileInFolder);
         newFileInFolder.save();
 
-        new ConfigTreeWriter(newFile);
+        // The parent was not saved when this one was created so a directory hierarchy is created
+        assertTrue(getFile("writables", "files", "i-will-not-exist").exists());
+        assertTrue(getFile("writables", "files", "i-will-not-exist").isDirectory());
 
-        System.out.println("FINAL STRUCTURE");
+        assertTrue(getFile("writables", "files", "i-will-not-exist", "i-also-do-not-exist.conf").exists());
+        assertTrue(getFile("writables", "files", "i-will-not-exist", "i-also-do-not-exist.conf").isFile());
 
-        fig = Fig.load(new PropertiesLoader("writables"));
+    }
+
+    @Test
+    public void testLoadRewrittenConfiguration() throws Exception {
+        Fig fig = Fig.load(new PropertiesLoader("writables"));
         new ConfigTreeWriter(fig.get("files"));
+    }
+
+    private File getFile(String... path) {
+        StringBuilder url = new StringBuilder();
+        for (String s : path) {
+            if (url.length() > 0) {
+                url.append(File.separator);
+            }
+            url.append(s);
+        }
+        return new File(cl.getResource(url.toString()).getFile());
     }
 }
