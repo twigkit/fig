@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>twigkit</groupId>
     <artifactId>fig</artifactId>
-    <version>1.3</version>
+    <version>1.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Hierarchical configuration management for Java</description>
 
@@ -54,7 +54,7 @@
         <repository>
             <id>repo.twigkit.com</id>
             <name>TwigKit</name>
-            <url>http://twigkit.artifactoryonline.com/twigkit/</url>
+            <url>http://twigkit.artifactoryonline.com/twigkit/release</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>never</updatePolicy>
