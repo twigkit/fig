@@ -120,6 +120,16 @@ public class PropertiesLoaderTest {
         new ConfigTreeWriter(fig.get("files"));
     }
 
+    @Test
+    public void testReadFromFile() throws Exception {
+        File folder = getFile("writables");
+        assertNotNull(folder);
+        String path = "file://" + folder;
+        Fig fig = Fig.load(new PropertiesLoader(path));
+        new ConfigTreeWriter(fig.get("files", "writable"));
+        assertEquals("in-parent", fig.get("files", "writable").value("new-value").as_string());
+    }
+
     private File getFile(String... path) {
         StringBuilder url = new StringBuilder();
         for (String s : path) {

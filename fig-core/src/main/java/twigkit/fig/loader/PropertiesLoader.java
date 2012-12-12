@@ -7,6 +7,7 @@ import twigkit.fig.Fig;
 import twigkit.fig.Value;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
@@ -51,12 +52,22 @@ public class PropertiesLoader implements Loader {
     }
 
     private static URL getResource(String name) {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        URL url = loader.getResource(name);
-        if (url == null) {
-            url = loader.getResource("/" + name);
+        if (name.startsWith("file://")) {
+            try {
+                return new File(name.substring(7)).toURL();
+            } catch (IOException e) {
+                logger.error("Failed to load file: {}", name);
+            }
+        } else {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            URL url = loader.getResource(name);
+            if (url == null) {
+                url = loader.getResource("/" + name);
+            }
+            return url;
         }
-        return url;
+
+        return null;
     }
 
     protected void readFolder(Fig fig, final File folder) {
