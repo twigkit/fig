@@ -5,6 +5,9 @@ import twigkit.fig.Fig;
 import twigkit.fig.Value;
 import twigkit.fig.loader.PropertiesLoader;
 
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * @author mr.olafsson
  */
@@ -15,10 +18,14 @@ public class Functions {
 	}
 
 	public static Config get(Fig fig, String conf) {
-		return fig.get(conf.split("_"));
+		return fig.get(conf.split("\\."));
 	}
 
 	public static Value value(Config conf, String name) {
 		return conf.value(name);
 	}
+
+    public static Collection<Config> extensions(Config conf) {
+        return conf.extensions();
+    }
 }

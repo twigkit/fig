@@ -61,4 +61,9 @@
 			twigkit.fig.Value value(twigkit.fig.Config,java.lang.String)
 		</function-signature>
 	</function>
+    <function>
+        <name>extensions</name>
+        <function-class>twigkit.fig.jsp.Functions</function-class>
+        <function-signature>java.util.Collection extensions(twigkit.fig.Config)</function-signature>
+    </function>
 </taglib>
