@@ -8,9 +8,7 @@ import twigkit.fig.visitor.ConfigTreeWriter;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author mr.olafsson
@@ -65,6 +63,60 @@ public class PropertiesLoaderTest {
         loader.write(newExistingFolder);
         assertTrue(getFile("writables", "files", "writable_override_more-override.conf").exists());
         assertTrue(getFile("writables", "files", "writable_override_more-override.conf").isFile());
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        PropertiesLoader loader = new PropertiesLoader("confs");
+        Fig fig = Fig.load(loader);
+        Config root = fig.get("delete");
+
+        Config a = new Config("a");
+        root.extend_with(a);
+        a.save();
+        Config b = new Config("b");
+        b.set("major", "domo");
+        a.extend_with(b);
+        b.save();
+        Config c = new Config("c");
+        b.extend_with(c);
+        c.set("foo", "bar");
+        c.save();
+
+        new ConfigTreeWriter(root);
+
+        c.delete();
+        assertEquals(b.extensions().size(), 0);
+
+        a.delete();
+        assertNull(fig.get("delete", "a"));
+    }
+
+    @Test
+    public void testMove() throws Exception {
+        Loader loader = new PropertiesLoader("writables");
+        Fig fig = Fig.load(loader);
+        Config root = fig.get("files");
+
+        Config a = new Config("a");
+        root.extend_with(a);
+        Config b = new Config("b");
+        a.extend_with(b);
+        Config c = new Config("c");
+        b.extend_with(c);
+        c.set("foo", "bar");
+        loader.write(c);
+
+        assertEquals(a, fig.get("files", "a"));
+        assertEquals(a.extensions().size(), 1);
+        assertEquals(b.extensions().size(), 1);
+        assertEquals(c.extensions().size(), 0);
+
+        Config newParent = new Config("new-parent");
+        root.extend_with(newParent);
+        a.move(newParent);
+
+        new ConfigTreeWriter(root);
     }
 
     @Test

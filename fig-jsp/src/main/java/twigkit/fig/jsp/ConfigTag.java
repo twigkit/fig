@@ -22,7 +22,7 @@ public class ConfigTag extends SimpleTagSupport {
 			var = name;
 		}
         if (fig != null) {
-            getJspContext().setAttribute(var, new JSPConfig(fig.get(name.split("\\."))));
+            getJspContext().setAttribute(var, new JSPConfig(fig.get(name.split("\\.")), name));
         }
 	}
 

@@ -14,4 +14,6 @@ public interface Loader {
 
     public void write(Config config) throws IOException;
 
+    public void delete(Config config) throws IOException;
+
 }

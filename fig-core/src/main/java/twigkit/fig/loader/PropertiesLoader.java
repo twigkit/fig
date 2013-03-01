@@ -1,5 +1,6 @@
 package twigkit.fig.loader;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
@@ -31,7 +32,7 @@ public class PropertiesLoader implements Loader {
 
     private File rootFolder;
 
-    private Map<String, File> filePaths;
+    public Map<String, File> filePaths;
 
     public PropertiesLoader(String path) {
         this.path = path;
@@ -148,6 +149,53 @@ public class PropertiesLoader implements Loader {
     }
 
     /**
+     * Delete the file backing the config and remove reference to the config
+     * from the parent.
+     *
+     * @param config
+     * @throws IOException
+     */
+    public void delete(Config config) throws IOException {
+        logger.debug("Deleting config {}", config.name());
+        if (config.has_extensions()) {
+            for (Config child: config.extensions()) {
+                delete(child);
+            }
+            File configFile = fileForConfig(config);
+            if (configFile.isDirectory()) {
+                if (configFile.listFiles().length > 0) {
+                    throw new IOException("All extensions of " + config.name()
+                        + " have been deleted but there are still files in the config folder "
+                        + configFile.getAbsolutePath()
+                    );
+                }
+            }
+            logger.debug("Deleting file {} for config {}", configFile, config.name());
+            if (!configFile.delete()) {
+                throw new IOException("Unable to delete config file directory "
+                    + configFile.getAbsolutePath()
+                );
+            }
+
+        } else {
+            File configFile = fileForConfig(config);
+            logger.debug("File for config {} is {}", config.name(), configFile);
+            if (configFile.isDirectory()) {
+                logger.debug("Deleting directory {}", configFile);
+                FileUtils.deleteDirectory(configFile);
+            } else {
+                logger.debug("Deleting file {}", configFile);
+                if (!configFile.delete()) {
+                    throw new IOException("Unable to delete config file "
+                        + configFile.getAbsolutePath()
+                    );
+                }
+            }
+            filePaths.remove(config.path());
+        }
+    }
+
+    /**
      * Write the Config back to the file that backs it.
      *
      * @param config
@@ -162,6 +210,7 @@ public class PropertiesLoader implements Loader {
         Writer out = null;
         try {
             if (!file.exists()) {
+                logger.debug("Creating a new config file {} for {}", file.getAbsolutePath(), config.name());
                 file.createNewFile();
             }
             logger.debug("Writing to file: {}", file);
@@ -170,6 +219,7 @@ public class PropertiesLoader implements Loader {
                 out.write(val.label() + ": " + val.as_string());
                 out.write("\n");
             }
+            filePaths.put(config.path(), file);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

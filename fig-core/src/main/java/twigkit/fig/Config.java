@@ -130,6 +130,16 @@ public class Config implements Serializable {
      * @param configuration
      * @return
      */
+    public void remove_extension(Config configuration) {
+        extensions.remove(configuration.name());
+    }
+
+    /**
+     * Add a {@link Config} as an extension to this one.
+     *
+     * @param configuration
+     * @return
+     */
     public Config extend_with(Config configuration) {
         configuration.parents().addAll(parents());
         configuration.parent(this);
@@ -137,6 +147,10 @@ public class Config implements Serializable {
 
         extensions.put(configuration.name(), configuration);
         return this;
+    }
+
+    public boolean has_extensions() {
+        return !extensions().isEmpty();
     }
 
     /**
@@ -248,6 +262,31 @@ public class Config implements Serializable {
             visitor.extension(extension);
             extension.accept(visitor);
         }
+    }
+
+    /**
+     * Assigns the config a new parent. Files backing the config will be moved accordingly.
+     *
+     * @param newParent new parent of this config.
+     * @return true of the move was successful.
+     */
+    public boolean move(Config newParent) {
+        if (delete()) {
+            newParent.extend_with(this);
+            return save();
+        }
+        return false;
+    }
+
+    public boolean delete() {
+        try {
+            loader.delete(this);
+            parent().remove_extension(this);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean save() {
