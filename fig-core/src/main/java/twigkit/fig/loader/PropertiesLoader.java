@@ -124,8 +124,10 @@ public class PropertiesLoader implements Loader {
     }
 
     private void fromProperties(Fig fig, String[] parents, File file) {
+        FileInputStream fis = null;
         try {
-            ResourceBundle p = new PropertyResourceBundle(new FileInputStream(file));
+            fis = new FileInputStream(file);
+            ResourceBundle p = new PropertyResourceBundle(fis);
             String[] levels = file.getName().substring(0, file.getName().lastIndexOf(FILE_EXTENSION.substring(0, 1))).split(LEVEL_SEPARATOR);
 
             Config config = new Config(levels[levels.length - 1], this);
@@ -145,6 +147,14 @@ public class PropertiesLoader implements Loader {
             filePaths.put(config.path(), file);
         } catch (IOException e) {
             logger.error("Failed to load Config from Properties", e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error("Failed to load Config from Properties", e);
+                }
+            }
         }
     }
 
