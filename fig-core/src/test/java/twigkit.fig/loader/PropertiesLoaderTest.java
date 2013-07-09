@@ -24,7 +24,7 @@ public class PropertiesLoaderTest {
 
     @Test
     public void testLoadingFolderWithoutParentConf() throws Exception {
-        Fig fig = Fig.load(new PropertiesLoader("folders"));
+        Fig fig = Fig.getInstance(new PropertiesLoader("folders"));
 
         Config conf = fig.get("folder", "sub-folder", "nested-in-subfolder-without-parent", "override");
         assertNotNull(conf);
@@ -35,7 +35,7 @@ public class PropertiesLoaderTest {
     @Test
     public void testWrite() throws Exception {
         Loader loader = new PropertiesLoader("writables");
-        Fig fig = Fig.load(loader);
+        Fig fig = Fig.getInstance(loader);
         Config conf = fig.get("files", "writable", "override");
 
         assertNotNull(conf);
@@ -45,7 +45,7 @@ public class PropertiesLoaderTest {
         loader.write(conf);
 
         // Reloading the configuration
-        fig = Fig.load(new PropertiesLoader("writables"));
+        fig = Fig.getInstance(new PropertiesLoader("writables"));
         Config changed = fig.get("files", "writable", "override");
         assertEquals(3, changed.values().size());
 
@@ -53,7 +53,7 @@ public class PropertiesLoaderTest {
         parent.set("new-value", "in-parent");
         loader.write(parent);
 
-        fig = Fig.load(new PropertiesLoader("writables"));
+        fig = Fig.getInstance(new PropertiesLoader("writables"));
         changed = fig.get("files", "writable", "override");
         assertEquals(4, changed.values().size());
 
@@ -68,7 +68,7 @@ public class PropertiesLoaderTest {
     @Test
     public void testDelete() throws Exception {
         PropertiesLoader loader = new PropertiesLoader("confs");
-        Fig fig = Fig.load(loader);
+        Fig fig = Fig.getInstance(loader);
         Config root = fig.get("delete");
 
         Config a = new Config("a");
@@ -95,7 +95,7 @@ public class PropertiesLoaderTest {
     @Test
     public void testMove() throws Exception {
         Loader loader = new PropertiesLoader("writables");
-        Fig fig = Fig.load(loader);
+        Fig fig = Fig.getInstance(loader);
         Config root = fig.get("files");
 
         Config a = new Config("a");
@@ -121,7 +121,7 @@ public class PropertiesLoaderTest {
 
     @Test
     public void testNewSiblingConfiguration() throws Exception {
-        Fig fig = Fig.load(new PropertiesLoader("writables"));
+        Fig fig = Fig.getInstance(new PropertiesLoader("writables"));
         Config parent = fig.get("files", "writable");
 
         Config newFolder = new Config("i-do-not-exist");
@@ -145,7 +145,7 @@ public class PropertiesLoaderTest {
 
     @Test
     public void testNewConfigurationFileInNewDirectory() throws Exception {
-        Fig fig = Fig.load(new PropertiesLoader("writables"));
+        Fig fig = Fig.getInstance(new PropertiesLoader("writables"));
         Config parent = fig.get("files", "writable");
 
         // If no sibling config file exists to override and an extension is made then create directory with config file
@@ -168,7 +168,7 @@ public class PropertiesLoaderTest {
 
     @Test
     public void testLoadRewrittenConfiguration() throws Exception {
-        Fig fig = Fig.load(new PropertiesLoader("writables"));
+        Fig fig = Fig.getInstance(new PropertiesLoader("writables"));
         new ConfigTreeWriter(fig.get("files"));
     }
 
@@ -177,7 +177,7 @@ public class PropertiesLoaderTest {
         File folder = getFile("writables");
         assertNotNull(folder);
         String path = "file://" + folder;
-        Fig fig = Fig.load(new PropertiesLoader(path));
+        Fig fig = Fig.getInstance(new PropertiesLoader(path));
         new ConfigTreeWriter(fig.get("files", "writable"));
         assertEquals("in-parent", fig.get("files", "writable").value("new-value").as_string());
     }

@@ -345,4 +345,21 @@ public class PropertiesLoader implements Loader {
 
         return combined;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PropertiesLoader)) return false;
+
+        PropertiesLoader that = (PropertiesLoader) o;
+
+        if (path != null ? !path.equals(that.path) : that.path != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return path != null ? path.hashCode() : 0;
+    }
 }

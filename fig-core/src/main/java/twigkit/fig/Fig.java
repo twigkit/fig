@@ -5,47 +5,76 @@ import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigFinder;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
+ * A {@link Fig} is a forest of root {@link Config}s, backed by an <em>ordered</em>list of
+ * configuration {@code Loader}s.
+ *
  * @author mr.olafsson
  */
 public class Fig {
 
-	private Map<String, Config> configs;
+    /** Map of singleton instances, parameterised by ordered lists of loaders. */
+    private static Map<FigKey, Fig> figs = new HashMap<FigKey, Fig>();
 
-	/**
+    /** The <em>ordered</em> list of loaders that back this Fig instance. */
+    private Loader[] loaders;
+
+    /** Root nodes of the configuration forest. */
+    private Map<String, Config> configs;
+
+
+    /**
 	 * Create an empty {@link Config}s set.
 	 */
-	public Fig() {
-		configs = new LinkedHashMap<String, Config>();
+	private Fig() {
+		this(new Loader[0]);
 	}
 
 	/**
 	 * Create with {@link twigkit.fig.loader.Loader}s.
 	 *
-	 * @param loader
+	 * @param loaders the {@link Loader}s that back this {@link Fig} instance.
 	 */
-	public Fig(Loader... loader) {
-		this();
-		for (Loader l : loader) {
-			l.load(this);
-		}
+	private Fig(Loader... loaders) {
+        this.loaders = loaders;
+        this.configs = new LinkedHashMap<String, Config>();
 	}
 
-	/**
-	 * Create with {@link twigkit.fig.loader.Loader}s.
-	 *
-	 * @param loader
-	 * @return
-	 */
-	public static Fig load(Loader... loader) {
-		return new Fig(loader);
-	}
+    /**
+     * Returns the singleton {@link Fig} instance corresponding to the given list of
+     * {@link Loader}s.
+     *
+     * @param loaders an <em>ordered</em> list of {@link Loader} instances.
+     * @return the singleton {@link Fig} instance corresponding to the given list of
+     *  {@link Loader}s.
+     */
+    public static Fig getInstance(Loader... loaders) {
+        FigKey key = new FigKey(loaders);
+        if (figs.containsKey(key)) {
+            return figs.get(key);
+        } else {
+            Fig fig = new Fig(loaders);
+            fig.reload();
+            figs.put(key, fig);
+            return fig;
+        }
+    }
 
-	/**
+
+    /**
+     * Reloads the configuration tree of this {@link Fig} instance, running through
+     * the {@link Loader} instances in sequence.
+     */
+    public void reload() {
+        for (Loader l : loaders) {
+            l.load(this);
+        }
+    }
+
+
+    /**
 	 * Add a {@link Config}.
 	 *
 	 * @param config
@@ -183,7 +212,35 @@ public class Fig {
 		return new GenericConfigurator(config);
 	}
 
-    public void write(Config config) throws IOException {
+    /**
+     * Primary key to reference {@link Fig} singleton instances.
+     *
+     */
+    static class FigKey {
 
+        /** An ordered list of loaders. */
+        private Loader[] loaders;
+
+        private FigKey(Loader[] loaders) {
+            this.loaders = loaders;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof FigKey)) return false;
+
+            FigKey figKey = (FigKey) o;
+
+            if (!Arrays.equals(loaders, figKey.loaders)) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return loaders != null ? Arrays.hashCode(loaders) : 0;
+        }
     }
+
 }

@@ -38,7 +38,7 @@ public class InjectionConfiguratorTest {
 
     @Test
     public void testAnnotationWith() {
-        final Fig fig = new Fig();
+        final Fig fig = Fig.getInstance();
         fig.add(fig.create("level_1").set("l1", "v1").extend_with(
                 Fig.create("level_2").set("l2", "v2").extend_with(
                         Fig.create("level_3").set("l3", "v3")

@@ -31,7 +31,7 @@ public class ConfigTag extends SimpleTagSupport {
 	}
 
 	public void setFrom(String confs) {
-		this.fig = Fig.load(new PropertiesLoader(confs));
+		this.fig = Fig.getInstance(new PropertiesLoader(confs));
 	}
 
 	public void setLoad(String name) {

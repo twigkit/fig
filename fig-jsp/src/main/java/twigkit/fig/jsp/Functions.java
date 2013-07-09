@@ -14,7 +14,7 @@ import java.util.Map;
 public class Functions {
 
 	public static Fig load(String config) {
-		return Fig.load(new PropertiesLoader(config));
+		return Fig.getInstance(new PropertiesLoader(config));
 	}
 
 	public static Config get(Fig fig, String conf) {

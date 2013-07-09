@@ -1,5 +1,6 @@
 package twigkit.fig;
 
+import junit.framework.Assert;
 import org.junit.Test;
 import twigkit.fig.loader.PropertiesLoader;
 import twigkit.fig.sample.InjectedSample;
@@ -13,22 +14,32 @@ import static org.junit.Assert.*;
 public class FigTest {
 
     @Test
+    public void testSingletonPattern() {
+        PropertiesLoader pl1 = new PropertiesLoader("confs");
+        PropertiesLoader pl2 = new PropertiesLoader("elements");
+
+        Assert.assertNotSame(Fig.getInstance(pl1, pl2), Fig.getInstance(pl2, pl1));
+        Assert.assertEquals(Fig.getInstance(pl1, pl2), Fig.getInstance(pl1,pl2));
+    }
+
+
+    @Test
     public void testLoadProperties() {
-        for (Config config : Fig.load(new PropertiesLoader("confs")).configs()) {
+        for (Config config : Fig.getInstance(new PropertiesLoader("confs")).configs()) {
             new ConfigTreeWriter(config);
         }
     }
 
     @Test
     public void testLoadElements() {
-        for (Config config : Fig.load(new PropertiesLoader("elements")).configs()) {
+        for (Config config : Fig.getInstance(new PropertiesLoader("elements")).configs()) {
             new ConfigTreeWriter(config);
         }
     }
 
     @Test
     public void testGetConfig() {
-        Fig fig = Fig.load(new PropertiesLoader("confs"), new PropertiesLoader("elements"));
+        Fig fig = Fig.getInstance(new PropertiesLoader("confs"), new PropertiesLoader("elements"));
 
         Config config = fig.get("does-not-exist");
         assertNull(config);
@@ -44,7 +55,7 @@ public class FigTest {
 
     @Test
     public void testFindConfig() {
-        Fig fig = Fig.load(new PropertiesLoader("confs"), new PropertiesLoader("elements"));
+        Fig fig = Fig.getInstance(new PropertiesLoader("confs"), new PropertiesLoader("elements"));
 
         Config config = fig.find("does-not-exist");
         assertNull(config);
@@ -62,13 +73,13 @@ public class FigTest {
 
     @Test
     public void testKeysOnly() throws Exception {
-        Fig fig = Fig.load(new PropertiesLoader("folders"));
+        Fig fig = Fig.getInstance(new PropertiesLoader("folders"));
         new ConfigTreeWriter(fig.get("folder", "keys-only"));
     }
 
     @Test
 	public void testLoadSubFolder() {
-		Fig fig = Fig.load(new PropertiesLoader("confs/sub"));
+		Fig fig = Fig.getInstance(new PropertiesLoader("confs/sub"));
 
         Config config = fig.get("group", "folder-extension");
         assertNotNull(config);
@@ -83,7 +94,7 @@ public class FigTest {
 
     @Test
     public void testCreate() {
-        Fig fig = new Fig();
+        Fig fig = Fig.getInstance();
         Config config = fig.create("conf").set("label", "value");
         assertNotNull(config);
         assertEquals("value", config.value("label").as_string());
@@ -126,7 +137,7 @@ public class FigTest {
             }
         };
 
-        Fig.load(new PropertiesLoader("elements")).with("elements", "solids", "metalloids", "polonium").configure(sample);
+        Fig.getInstance(new PropertiesLoader("elements")).with("elements", "solids", "metalloids", "polonium").configure(sample);
 
         sample.validate();
     }
