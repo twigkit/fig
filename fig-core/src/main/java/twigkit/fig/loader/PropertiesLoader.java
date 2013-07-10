@@ -13,9 +13,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
 
-/**
- * @author mr.olafsson
- */
 public class PropertiesLoader implements Loader {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertiesLoader.class);
@@ -301,10 +298,6 @@ public class PropertiesLoader implements Loader {
 
         logger.debug("Final file found [{}]", f);
         return f;
-    }
-
-    private File createFileForConfig(Iterator<Config> iterator, Config config, File folder) {
-        return null;
     }
 
     private boolean configFileExists(File folder, Config config) {
