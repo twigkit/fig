@@ -6,6 +6,11 @@ import twigkit.fig.loader.PropertiesLoader;
 import twigkit.fig.sample.InjectedSample;
 import twigkit.fig.visitor.ConfigTreeWriter;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import static org.junit.Assert.*;
 
 /**
@@ -19,9 +24,32 @@ public class FigTest {
         PropertiesLoader pl2 = new PropertiesLoader("elements");
 
         Assert.assertNotSame(Fig.getInstance(pl1, pl2), Fig.getInstance(pl2, pl1));
-        Assert.assertEquals(Fig.getInstance(pl1, pl2), Fig.getInstance(pl1,pl2));
+        Assert.assertEquals(Fig.getInstance(pl1, pl2), Fig.getInstance(pl1, pl2));
     }
 
+    @Test
+    public void testReload() throws Exception {
+        File file = File.createTempFile("fig", ".conf");
+        String confName = file.getName().substring(0, file.getName().indexOf(".conf"));
+
+        /** Add foo=bar as a property */
+        PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+        writer.println("foo: bar");
+        writer.close();
+        PropertiesLoader loader = new PropertiesLoader("file://" + file.getParent());
+        Assert.assertEquals("bar", Fig.getInstance(loader).get(confName).value("foo").as_string());
+
+        /** Reset the foo property */
+        writer = new PrintWriter(new FileOutputStream(file));
+        writer.println("foo: war");
+        writer.close();
+        Assert.assertEquals("bar", Fig.getInstance(loader).get(confName).value("foo").as_string()); // still "bar" since we haven't reloaded
+
+        /** Now reload and make sure the value has been updated */
+        Fig.getInstance(loader).reload();
+        Assert.assertEquals("war", Fig.getInstance(loader).get(confName).value("foo").as_string()); // we should now get the new value
+
+    }
 
     @Test
     public void testLoadProperties() {
