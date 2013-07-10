@@ -1,14 +1,13 @@
 package twigkit.fig.loader;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.Value;
+import twigkit.fig.util.FileUtils;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
@@ -40,35 +39,11 @@ public class PropertiesLoader implements Loader {
     }
 
     public void load(Fig fig) {
-        try {
-            URL url = getResource(path);
-            if (url != null) {
-                rootFolder = new File(url.toURI());
-                parentPathLength = rootFolder.getAbsolutePath().length();
-                readFolder(fig, rootFolder);
-            }
-        } catch (URISyntaxException e) {
-            logger.error("Failed to load Config", e);
+        rootFolder = FileUtils.getResourceAsFile(path);
+        if (rootFolder != null) {
+            parentPathLength = rootFolder.getAbsolutePath().length();
+            readFolder(fig, rootFolder);
         }
-    }
-
-    private static URL getResource(String name) {
-        if (name.startsWith("file://")) {
-            try {
-                return new File(name.substring(7)).toURL();
-            } catch (IOException e) {
-                logger.error("Failed to load file: {}", name);
-            }
-        } else {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            URL url = loader.getResource(name);
-            if (url == null) {
-                url = loader.getResource("/" + name);
-            }
-            return url;
-        }
-
-        return null;
     }
 
     protected void readFolder(Fig fig, final File folder) {
@@ -192,7 +167,7 @@ public class PropertiesLoader implements Loader {
             logger.debug("File for config {} is {}", config.name(), configFile);
             if (configFile.isDirectory()) {
                 logger.debug("Deleting directory {}", configFile);
-                FileUtils.deleteDirectory(configFile);
+                org.apache.commons.io.FileUtils.deleteDirectory(configFile);
             } else {
                 logger.debug("Deleting file {}", configFile);
                 if (!configFile.delete()) {
