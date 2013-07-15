@@ -224,7 +224,7 @@ public class Config implements Serializable {
     }
 
     public Config parent() {
-        return parents().get(parents().size() - 1);
+        return (parents().isEmpty()) ? null : parents().get(parents().size() - 1);
     }
 
     /**
