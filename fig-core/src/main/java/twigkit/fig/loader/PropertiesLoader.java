@@ -84,9 +84,11 @@ public class PropertiesLoader implements Loader {
 
         // Files
         if (folder.getAbsolutePath().length() > rootPathLength) {
+            System.out.println("#1 - " + folder.getName());
             // Accounting for trailing slash (maybe should check if it's there first)
             readFiles(fig, folder, folder.getAbsolutePath().substring(rootPathLength + 1).split(Pattern.quote(File.separator)), files);
         } else {
+            System.out.println("#2 - " + folder.getName());
             readFiles(fig, folder, null, files);
         }
 
