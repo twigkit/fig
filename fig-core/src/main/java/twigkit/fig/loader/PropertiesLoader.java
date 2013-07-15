@@ -8,8 +8,6 @@ import twigkit.fig.Value;
 import twigkit.fig.util.FileUtils;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -18,13 +16,14 @@ public class PropertiesLoader implements Loader {
     private static final Logger logger = LoggerFactory.getLogger(PropertiesLoader.class);
 
     public static final String FILE_EXTENSION = ".conf";
-    public static final String LEVEL_SEPARATOR = "_";
+    public static final String LEVEL_SEPARATOR = ".";
+    public static final String LEVEL_SEPARATOR_PATTERN = "\\.";
 
     public static final String ISO_8859_1 = "ISO-8859-1";
     public static final String UTF_8 = "UTF-8";
 
     private String path;
-    private int parentPathLength;
+    private int rootPathLength;
 
     private File rootFolder;
 
@@ -35,20 +34,35 @@ public class PropertiesLoader implements Loader {
         filePaths = new HashMap<String, File>();
     }
 
+    /**
+     * Populates the given Fig instance with configurations found under the root path
+     * stored by this loader.
+     * <p/>
+     * Note that if the root folder contains a .conf file with the name of the folder,
+     * then we take the root folder to be the sole tree in the Fig forest.
+     * Otherwise, each configuration directly stored in the root folder becomes a tree
+     * of its own, and Fig is a proper forst.
+     *
+     * @param fig the current {@code Fig} instance.
+     */
     public void load(Fig fig) {
         rootFolder = FileUtils.getResourceAsFile(path);
         if (rootFolder != null) {
-            parentPathLength = rootFolder.getAbsolutePath().length();
+
+            if (!rootFolder.getParentFile().exists() || !new File(rootFolder, rootFolder.getName() + FILE_EXTENSION).exists()) {
+                rootPathLength = rootFolder.getAbsolutePath().length();
+            } else {
+                rootPathLength = rootFolder.getParentFile().getAbsolutePath().length();
+            }
             readFolder(fig, rootFolder);
         }
     }
-
     protected void readFolder(Fig fig, final File folder) {
         // If there is a configuration file with the same name as the folder, then add that first
         File conf = new File(folder, folder.getName() + FILE_EXTENSION);
         if (conf.isFile()) {
-            if (parentPathLength < folder.getParentFile().getAbsolutePath().length()) {
-                fromProperties(fig, folder.getParentFile().getAbsolutePath().substring(parentPathLength + 1).split(Pattern.quote(File.separator)), conf);
+            if (rootPathLength < folder.getParentFile().getAbsolutePath().length()) {
+                fromProperties(fig, folder.getParentFile().getAbsolutePath().substring(rootPathLength + 1).split(Pattern.quote(File.separator)), conf);
             } else {
                 fromProperties(fig, null, conf);
             }
@@ -69,9 +83,9 @@ public class PropertiesLoader implements Loader {
         });
 
         // Files
-        if (folder.getAbsolutePath().length() > parentPathLength) {
+        if (folder.getAbsolutePath().length() > rootPathLength) {
             // Accounting for trailing slash (maybe should check if it's there first)
-            readFiles(fig, folder, folder.getAbsolutePath().substring(parentPathLength + 1).split(Pattern.quote(File.separator)), files);
+            readFiles(fig, folder, folder.getAbsolutePath().substring(rootPathLength + 1).split(Pattern.quote(File.separator)), files);
         } else {
             readFiles(fig, folder, null, files);
         }
@@ -100,7 +114,7 @@ public class PropertiesLoader implements Loader {
         try {
             fis = new FileInputStream(file);
             ResourceBundle p = new PropertyResourceBundle(fis);
-            String[] levels = file.getName().substring(0, file.getName().lastIndexOf(FILE_EXTENSION.substring(0, 1))).split(LEVEL_SEPARATOR);
+            String[] levels = file.getName().substring(0, file.getName().lastIndexOf(FILE_EXTENSION.substring(0, 1))).split(LEVEL_SEPARATOR_PATTERN);
 
             Config config = new Config(levels[levels.length - 1], this);
 

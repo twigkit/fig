@@ -39,6 +39,7 @@ public class InjectionConfigurator implements Configurator<Object> {
         Field[] fields = ReflectionUtils.getDeclaredAndInheritedFields(target.getClass(), false);
 
         for (Field field : fields) {
+            System.out.println("Field: " + field.getName());
             if (field.isAnnotationPresent(Configure.class)) {
                 Configure annotation = field.getAnnotation(Configure.class);
 
@@ -62,9 +63,11 @@ public class InjectionConfigurator implements Configurator<Object> {
                 }
 
                 if (fig != null && !annotation.with().equals("")) {
+                    System.out.println("with() = " + annotation.with());
                     config = fig.get(annotation.with().split(Configure.SEPARATOR));
                 }
 
+                System.out.println("name = " + name);
                 Value value = config.value(name);
                 if (value.get() != null) {
                     field.setAccessible(true);

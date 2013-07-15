@@ -1,5 +1,6 @@
 package twigkit.fig.loader;
 
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -73,8 +74,8 @@ public class PropertiesLoaderTest {
         newExistingFolder.set("new-file", "new-value");
         changed.extend_with(newExistingFolder);
         loader.write(newExistingFolder);
-        assertTrue(getFile(figPath, "files", "writable_override_more-override.conf").exists());
-        assertTrue(getFile(figPath, "files", "writable_override_more-override.conf").isFile());
+        assertTrue(getFile(figPath, "files", "writable.override.more-override.conf").exists());
+        assertTrue(getFile(figPath, "files", "writable.override.more-override.conf").isFile());
     }
 
     @Test
@@ -154,8 +155,8 @@ public class PropertiesLoaderTest {
         newFile.save();
 
         // The parent exists as a file so this will be a sibling file override (with LEVEL_SEPARATOR)
-        assertTrue(getFile(figPath, "files", "i-do-not-exist_i-also-do-not-exist.conf").exists());
-        assertTrue(getFile(figPath, "files", "i-do-not-exist_i-also-do-not-exist.conf").isFile());
+        assertTrue(getFile(figPath, "files", "i-do-not-exist.i-also-do-not-exist.conf").exists());
+        assertTrue(getFile(figPath, "files", "i-do-not-exist.i-also-do-not-exist.conf").isFile());
     }
 
     @Test
@@ -191,5 +192,29 @@ public class PropertiesLoaderTest {
             url.append(s);
         }
         return FileUtils.getResourceAsFile(url.toString());
+    }
+
+    @Test
+    public void testRootWithConfig() {
+        PropertiesLoader loader = new PropertiesLoader("root-with-config");
+        Fig fig = Fig.getInstance(loader);
+        Assert.assertEquals(1, fig.configs().size());
+        Config rootConfig = fig.get("root-with-config");
+        Assert.assertNotNull(rootConfig);
+        Config childConfig = fig.find("child");
+        Assert.assertNotNull(childConfig);
+        Assert.assertEquals(rootConfig, childConfig.parent());
+    }
+
+    @Test
+    public void testRootWithoutConfig() {
+        PropertiesLoader loader = new PropertiesLoader("root-without-config");
+        Fig fig = Fig.getInstance(loader);
+        Assert.assertEquals(1, fig.configs().size());
+        Config rootConfig = fig.get("root-with-config");
+        Assert.assertNull(rootConfig);
+        Config childConfig = fig.find("child");
+        Assert.assertNotNull(childConfig);
+        Assert.assertNull(childConfig.parent());
     }
 }
