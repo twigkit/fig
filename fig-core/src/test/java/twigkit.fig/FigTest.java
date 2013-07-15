@@ -8,7 +8,6 @@ import twigkit.fig.visitor.ConfigTreeWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 import static org.junit.Assert.*;
