@@ -196,10 +196,10 @@ public class PropertiesLoaderTest {
 
     @Test
     public void testRootWithConfig() {
-        PropertiesLoader loader = new PropertiesLoader("elements");
+        PropertiesLoader loader = new PropertiesLoader("root-with-config");
         Fig fig = Fig.getInstance(loader);
         Assert.assertEquals(1, fig.configs().size());
-        Config rootConfig = fig.get("elements");
+        Config rootConfig = fig.get("root-with-config");
         Assert.assertNotNull(rootConfig);
         Assert.assertNull(rootConfig.parent());
         Assert.assertEquals(1, rootConfig.extensions().size());
@@ -217,10 +217,8 @@ public class PropertiesLoaderTest {
         PropertiesLoader loader = new PropertiesLoader("root-without-config");
         Fig fig = Fig.getInstance(loader);
         Assert.assertEquals(1, fig.configs().size());
-        Config rootConfig = fig.get("root-with-config");
+        Config rootConfig = fig.get("root-without-config");
         Assert.assertNull(rootConfig);
-        Assert.assertNull(rootConfig.parent());
-        Assert.assertEquals(1, rootConfig.extensions().size());
         Config childConfig = fig.find("child");
         Assert.assertNotNull(childConfig);
         Assert.assertNull(childConfig.parent());

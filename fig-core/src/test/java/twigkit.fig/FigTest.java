@@ -165,12 +165,7 @@ public class FigTest {
         };
 
         Fig fig = Fig.getInstance(new PropertiesLoader("elements"));
-
-        for (Config c: fig.get("elements").extensions()) {
-             System.out.println(c.name() + "(" + c.parent().name() + ")");
-        }
-
-//        Fig.getInstance(new PropertiesLoader("elements")).with("elements", "solids", "metalloids", "polonium").configure(sample);
+        Fig.getInstance(new PropertiesLoader("elements")).with("elements", "solids", "metalloids", "polonium").configure(sample);
 
         sample.validate();
     }

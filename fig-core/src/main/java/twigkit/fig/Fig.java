@@ -101,12 +101,6 @@ public class Fig {
 	 * @param config
 	 */
 	public Fig add(Config config, String... path) {
-        System.out.print("Adding " + config.name() + " at ");
-        for (String p: path) {
-            System.out.print(p);
-            System.out.print(' ');
-        }
-        System.out.println();
 		if (path.length == 1) {
 			configs.put(config.name(), config);
 		} else {
