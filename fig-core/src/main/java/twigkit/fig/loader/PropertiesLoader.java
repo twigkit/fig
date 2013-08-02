@@ -55,6 +55,8 @@ public class PropertiesLoader implements Loader {
                 rootPathLength = rootFolder.getParentFile().getAbsolutePath().length();
             }
             readFolder(fig, rootFolder);
+        } else {
+            logger.error("Fig folder not found: {}", path);
         }
     }
     protected void readFolder(Fig fig, final File folder) {

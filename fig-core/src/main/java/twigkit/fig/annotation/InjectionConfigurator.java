@@ -49,7 +49,11 @@ public class InjectionConfigurator implements Configurator<Object> {
                 }
 
                 try {
-                    field.set(target, config);
+                    if (config != null) {
+                        field.set(target, config);
+                    } else {
+                        logger.error("Configuration not found for field: {}", field.getName());
+                    }
                 } catch (IllegalAccessException e) {
                     logger.error("Failed to configure field", e);
                 }
@@ -65,14 +69,18 @@ public class InjectionConfigurator implements Configurator<Object> {
                     config = fig.get(annotation.with().split(Configure.SEPARATOR));
                 }
 
-                Value value = config.value(name);
-                if (value.get() != null) {
-                    field.setAccessible(true);
-                    try {
-                        field.set(target, value.get());
-                    } catch (IllegalAccessException e) {
-                        logger.error("Failed to configure value", e);
+                if (config != null) {
+                    Value value = config.value(name);
+                    if (value.get() != null) {
+                        field.setAccessible(true);
+                        try {
+                            field.set(target, value.get());
+                        } catch (IllegalAccessException e) {
+                            logger.error("Failed to configure value", e);
+                        }
                     }
+                } else {
+                    logger.error("Configuration not found: {}", name);
                 }
             }
         }
