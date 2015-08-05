@@ -102,7 +102,11 @@ public class Fig {
 	 */
 	public Fig add(Config config, String... path) {
 		if (path.length == 1) {
-			configs.put(config.name(), config);
+			if (configs.containsKey(config.name())) {
+				configs.get(config.name()).extend_with(config);
+			} else {
+				configs.put(config.name(), config);
+			}
 		} else {
 			if (!configs.containsKey(path[0])) {
 				add(new Config(path[0], config.loader));

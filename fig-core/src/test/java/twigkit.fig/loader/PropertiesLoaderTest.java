@@ -214,16 +214,14 @@ public class PropertiesLoaderTest {
     }
 
     @Test
-    @Ignore
     public void testMultipleLoaders() {
         PropertiesLoader loader1 = new PropertiesLoader("first");
         PropertiesLoader loader2 = new PropertiesLoader("second");
         Fig fig = Fig.getInstance(loader1, loader2);
         Assert.assertEquals(1, fig.configs().size());
-        Config conf = fig.get("config");
-        Assert.assertEquals(2, conf.values().size());
+        Config conf = fig.get("root", "config");
+        Assert.assertEquals(1, conf.values().size()); // second config overwrites the first one
         Assert.assertEquals("different", conf.value("foo").as_string());
-        Assert.assertEquals("foo", conf.value("bar").as_string());
 
     }
 
