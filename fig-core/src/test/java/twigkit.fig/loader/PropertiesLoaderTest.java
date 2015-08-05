@@ -2,6 +2,7 @@ package twigkit.fig.loader;
 
 import junit.framework.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -210,6 +211,20 @@ public class PropertiesLoaderTest {
         Config childConfig = fig.find("child");
         Assert.assertNotNull(childConfig);
         Assert.assertEquals(rootConfig, childConfig.parent());
+    }
+
+    @Test
+    @Ignore
+    public void testMultipleLoaders() {
+        PropertiesLoader loader1 = new PropertiesLoader("first");
+        PropertiesLoader loader2 = new PropertiesLoader("second");
+        Fig fig = Fig.getInstance(loader1, loader2);
+        Assert.assertEquals(1, fig.configs().size());
+        Config conf = fig.get("config");
+        Assert.assertEquals(2, conf.values().size());
+        Assert.assertEquals("different", conf.value("foo").as_string());
+        Assert.assertEquals("foo", conf.value("bar").as_string());
+
     }
 
     @Test
