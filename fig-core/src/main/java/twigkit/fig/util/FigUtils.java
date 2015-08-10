@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Utility class to merge two different instances of {@link Fig}.
+ * Utility class to perform operations on an existing {@link Fig}.
  * @author scottbrown
  */
 public class FigUtils {
@@ -22,7 +22,7 @@ public class FigUtils {
      * @param secondary The {@link Fig} that will merged into the primary
      */
     public static Fig mergeFig(Fig primary, Fig secondary) {
-        walkThroughConfigs(primary, secondary.configs());
+        walkThroughFig(primary, secondary.configs());
         return primary;
     }
 
@@ -31,12 +31,12 @@ public class FigUtils {
      * @param fig   The {@link Fig} to be updated
      * @param configs   The {@link Config}s to be merged.
      */
-    private static void walkThroughConfigs(Fig fig, Collection<Config> configs) {
+    private static void walkThroughFig(Fig fig, Collection<Config> configs) {
         for (Config config : configs) {
             mergeConfig(fig, config);
 
             if (config.has_extensions()) {
-                walkThroughConfigs(fig, config.extensions());
+                walkThroughFig(fig, config.extensions());
             }
         }
     }

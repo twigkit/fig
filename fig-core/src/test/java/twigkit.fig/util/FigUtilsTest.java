@@ -61,7 +61,7 @@ public class FigUtilsTest {
         String originalRoot1KeyValue = primary.find("root").value("root-1-key").as_string();
         String originalExtension2Value = primary.find("extension-2").value("root-1-key").as_string();
 
-        Merger.mergeFig(primary, secondary);
+        FigUtils.mergeFig(primary, secondary);
 
         // Expect the primary root config to have been updated
         Config updatedPrimaryRootConfig = primary.find("root");
@@ -78,7 +78,7 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewPropertyValues() {
-        Merger.mergeFig(primary, secondary);
+        FigUtils.mergeFig(primary, secondary);
 
         // Expect the primary root config value "root-2-key" to be updated
         assertEquals("root-2-new-value", primary.find("root").value("root-2-key").as_string());
@@ -92,7 +92,7 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewProperties() {
-        Merger.mergeFig(primary, secondary);
+        FigUtils.mergeFig(primary, secondary);
 
         // Expect there to be a new primary root config value "root-3-key"
         Config updatedPrimaryRootConfig = primary.find("root");
@@ -104,7 +104,7 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewExtensions() {
-        Merger.mergeFig(primary, secondary);
+        FigUtils.mergeFig(primary, secondary);
 
         for (Config config : primary.configs()) {
             new ConfigTreeWriter(config);
@@ -116,7 +116,7 @@ public class FigUtilsTest {
 
     @Test
     public void testNewConfigsCanBeAdded() {
-        Merger.mergeFig(primary, secondary);
+        FigUtils.mergeFig(primary, secondary);
 
         assertNotNull(primary.get("new_sub"));
         assertEquals("newsub-1-value", primary.find("new_sub").value("newsub-1-key").as_string());
@@ -124,7 +124,7 @@ public class FigUtilsTest {
 
     @Test
     public void testChildConfigPropertyValuesCanBeUpdated() {
-        Merger.mergeFig(primary, secondary);
+        FigUtils.mergeFig(primary, secondary);
 
         assertEquals("sub-1-new-value", primary.find("group").value("sub-1-key").as_string());
     }

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.Value;
+import twigkit.fig.util.FigUtils;
 import twigkit.fig.util.FileUtils;
 
 import java.io.*;
@@ -126,11 +127,13 @@ public class PropertiesLoader implements Loader {
                 config.set(new Value<Object>(new String(key.getBytes(ISO_8859_1), UTF_8), new String(p.getString(key).getBytes(ISO_8859_1), UTF_8), false));
             }
 
-            if (parents != null && parents.length > 0) {
-                levels = combine(parents, levels);
-            }
+//            if (parents != null && parents.length > 0) {
+//                levels = combine(parents, levels);
+//            }
 
+//            FigUtils.mergeConfig(fig, config);
             fig.add(config, levels);
+
             // Keeping a reference to the source file
             filePaths.put(config.path(), file);
         } catch (IOException e) {
