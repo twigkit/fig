@@ -101,13 +101,8 @@ public class Fig {
 	 * @param config
 	 */
 	public Fig add(Config config, String... path) {
-        System.out.println("Adding " + config.path() + " with parent " + config.parent() + " (path length = " + path.length);
-        if (path.length == 1) {
-//			if (configs.containsKey(config.name())) {
-//				configs.get(config.name()).extend_with(config);
-//			} else {
-				configs.put(config.name(), config);
-//			}
+		if (path.length == 1) {
+			configs.put(config.name(), config);
 		} else {
 			if (!configs.containsKey(path[0])) {
 				add(new Config(path[0], config.loader));
