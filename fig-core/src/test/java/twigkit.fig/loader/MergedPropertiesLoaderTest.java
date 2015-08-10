@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author scottbrown
@@ -57,5 +58,13 @@ public class MergedPropertiesLoaderTest {
             exception.expect(IOException.class);
             loader.delete(iterator.next());
         }
+    }
+
+    @Test
+    public void testReturnNonNullWhenPathDoesNotExist() {
+        Loader loader = new MergedPropertiesLoader("confs", "invalid_path");
+        Fig fig = Fig.getInstance(loader);
+
+        assertNotNull(fig);
     }
 }
