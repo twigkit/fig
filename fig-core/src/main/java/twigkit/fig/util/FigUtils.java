@@ -21,9 +21,8 @@ public class FigUtils {
      * @param primary  The {@link Fig} to be updated
      * @param secondary The {@link Fig} that will merged into the primary
      */
-    public static Fig mergeFig(Fig primary, Fig secondary) {
+    public static void mergeFig(Fig primary, Fig secondary) {
         walkThroughFig(primary, secondary.configs());
-        return primary;
     }
 
     /**
@@ -76,7 +75,7 @@ public class FigUtils {
      * @param config   The path will be acquired for this {@link Config}
      * @return   The path for this {@link Config}.
      */
-    private static String[] getPathTo(Config config) {
+    public static String[] getPathTo(Config config) {
         // Acquire parent hierarchy
         List<Config> parents = config.parents();
         Iterator<Config> iterator = parents.iterator();

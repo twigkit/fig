@@ -1,12 +1,9 @@
 package twigkit.fig.util;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.loader.PropertiesLoader;
-import twigkit.fig.visitor.ConfigTreeWriter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -16,48 +13,11 @@ import static org.junit.Assert.assertNotNull;
  */
 public class FigUtilsTest {
 
-    private Fig primary;
-    private Fig secondary;
-
-    @Before
-    public void loadFigs() {
-        primary = Fig.getInstance(new PropertiesLoader("confs"));
-        secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
-    }
-
-    @After
-    public void disposeFigs() {
-        primary = null;
-        secondary = null;
-    }
-
-    @Test
-    public void testOriginalStates() {
-        // Primary root fig values
-        Config primaryRootConfig = primary.find("root");
-        assertEquals(2, primaryRootConfig.values().size());
-        assertEquals("root-1-value", primaryRootConfig.value("root-1-key").as_string());
-        assertEquals("root-2-value", primaryRootConfig.value("root-2-key").as_string());
-
-        // Secondary root config values
-        Config secondaryRootConfig = secondary.find("root");
-        assertEquals(3, secondaryRootConfig.values().size());
-        assertEquals(2, secondaryRootConfig.extensions().size());
-
-        // Secondary extension config values for "extension-2"
-        Config secondaryExtensionConfig = secondary.find("extension-2");
-        assertEquals(5, secondaryExtensionConfig.values().size());
-        assertEquals("ex-2-new-value", secondaryExtensionConfig.value("ex-2-key").as_string());
-        assertEquals("ex-2-new-new-value", secondaryExtensionConfig.value("ex-2-new-key").as_string());
-
-        // Secondary extension config values for "extension-3"
-        secondaryExtensionConfig = secondary.find("extension-3");
-        assertEquals(4, secondaryExtensionConfig.values().size());
-        assertEquals("ex-3-value", secondaryExtensionConfig.value("ex-3-key").as_string());
-    }
-
     @Test
     public void testExistingConfigPropertiesAreLeftUnchanged() {
+        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
+
         String originalRoot1KeyValue = primary.find("root").value("root-1-key").as_string();
         String originalExtension2Value = primary.find("extension-2").value("root-1-key").as_string();
 
@@ -78,6 +38,9 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewPropertyValues() {
+        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
+
         FigUtils.mergeFig(primary, secondary);
 
         // Expect the primary root config value "root-2-key" to be updated
@@ -92,6 +55,9 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewProperties() {
+        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
+
         FigUtils.mergeFig(primary, secondary);
 
         // Expect there to be a new primary root config value "root-3-key"
@@ -104,11 +70,10 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewExtensions() {
-        FigUtils.mergeFig(primary, secondary);
+        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
-        for (Config config : primary.configs()) {
-            new ConfigTreeWriter(config);
-        }
+        FigUtils.mergeFig(primary, secondary);
 
         // Expect there to be a new primary extension config
         assertEquals("ex-3-value", primary.find("extension-3").value("ex-3-key").as_string());
@@ -116,6 +81,9 @@ public class FigUtilsTest {
 
     @Test
     public void testNewConfigsCanBeAdded() {
+        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
+
         FigUtils.mergeFig(primary, secondary);
 
         assertNotNull(primary.get("new_sub"));
@@ -124,6 +92,9 @@ public class FigUtilsTest {
 
     @Test
     public void testChildConfigPropertyValuesCanBeUpdated() {
+        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
+
         FigUtils.mergeFig(primary, secondary);
 
         assertEquals("sub-1-new-value", primary.find("group").value("sub-1-key").as_string());

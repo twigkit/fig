@@ -42,7 +42,7 @@ public class PropertiesLoader implements Loader {
      * Note that if the root folder contains a .conf file with the name of the folder,
      * then we take the root folder to be the sole tree in the Fig forest.
      * Otherwise, each configuration directly stored in the root folder becomes a tree
-     * of its own, and Fig is a proper forst.
+     * of its own, and Fig is a proper forest.
      *
      * @param fig the current {@code Fig} instance.
      */
@@ -127,11 +127,10 @@ public class PropertiesLoader implements Loader {
                 config.set(new Value<Object>(new String(key.getBytes(ISO_8859_1), UTF_8), new String(p.getString(key).getBytes(ISO_8859_1), UTF_8), false));
             }
 
-//            if (parents != null && parents.length > 0) {
-//                levels = combine(parents, levels);
-//            }
+            if (parents != null && parents.length > 0) {
+                levels = combine(parents, levels);
+            }
 
-//            FigUtils.mergeConfig(fig, config);
             fig.add(config, levels);
 
             // Keeping a reference to the source file
