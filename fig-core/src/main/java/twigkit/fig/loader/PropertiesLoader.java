@@ -48,8 +48,7 @@ public class PropertiesLoader implements Loader {
      */
     public void load(Fig fig) {
         rootFolder = FileUtils.getResourceAsFile(path);
-        if (rootFolder != null) {
-
+        if (rootFolder != null && rootFolder.exists()) {
             if (!rootFolder.getParentFile().exists() || !new File(rootFolder, rootFolder.getName() + FILE_EXTENSION).exists()) {
                 rootPathLength = rootFolder.getAbsolutePath().length();
             } else {
@@ -57,7 +56,7 @@ public class PropertiesLoader implements Loader {
             }
             readFolder(fig, rootFolder);
         } else {
-            logger.error("Fig folder not found: {}", path);
+            logger.warn("Fig folder not found: {}", path);
         }
     }
     protected void readFolder(Fig fig, final File folder) {
