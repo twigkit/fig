@@ -46,8 +46,8 @@ public class FigTest {
 
         /** Now reload and make sure the value has been updated */
         Fig.getInstance(loader).reload();
-        Assert.assertEquals("war", Fig.getInstance(loader).get(confName).value("foo").as_string()); // we should now get the new value
 
+        Assert.assertEquals("war", Fig.getInstance(loader).get(confName).value("foo").as_string()); // we should now get the new value
     }
 
     @Test
@@ -110,7 +110,7 @@ public class FigTest {
 
         Config config = fig.get("group", "folder-extension");
         assertNotNull(config);
-		assertEquals("sub-1-value", config.value("sub-1-key").as_string());
+		assertEquals("sub-1-value", config.value("sub-1-key").as_string());//
 		assertEquals("group-folder-extension-value", config.value("group-folder-extension-key").as_string());
 		assertNotNull(config.value("sub-group-child-1-key"));
 		assertNull(config.value("sub-group-child-1-key").get());

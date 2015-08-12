@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.Value;
+import twigkit.fig.util.FigUtils;
 import twigkit.fig.util.FileUtils;
 
 import java.io.*;
@@ -41,14 +42,13 @@ public class PropertiesLoader implements Loader {
      * Note that if the root folder contains a .conf file with the name of the folder,
      * then we take the root folder to be the sole tree in the Fig forest.
      * Otherwise, each configuration directly stored in the root folder becomes a tree
-     * of its own, and Fig is a proper forst.
+     * of its own, and Fig is a proper forest.
      *
      * @param fig the current {@code Fig} instance.
      */
     public void load(Fig fig) {
         rootFolder = FileUtils.getResourceAsFile(path);
         if (rootFolder != null) {
-
             if (!rootFolder.getParentFile().exists() || !new File(rootFolder, rootFolder.getName() + FILE_EXTENSION).exists()) {
                 rootPathLength = rootFolder.getAbsolutePath().length();
             } else {
@@ -131,6 +131,7 @@ public class PropertiesLoader implements Loader {
             }
 
             fig.add(config, levels);
+
             // Keeping a reference to the source file
             filePaths.put(config.path(), file);
         } catch (IOException e) {

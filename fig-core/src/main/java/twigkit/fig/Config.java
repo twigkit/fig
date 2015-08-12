@@ -140,7 +140,7 @@ public class Config implements Serializable {
      * @param configuration
      * @return
      */
-    public Config extend_with(Config configuration) {
+    public Config  extend_with(Config configuration) {
         configuration.parents().addAll(parents());
         configuration.parent(this);
         configuration.loader = loader;

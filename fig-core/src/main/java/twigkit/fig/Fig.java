@@ -157,8 +157,9 @@ public class Fig {
 	/**
 	 * Find a {@link Config} by name, traversing the hierarchy of {@link Config}s and their extensions.
 	 *
-	 * @param name
-	 * @return
+	 * @param   name   The name of the {@link Config} to be found.
+	 * @return a {@link Config} with the given name. If no {@link Config} can be found a
+     * null is returned.
 	 */
 	public Config find(String name) {
 		Config config = null;
