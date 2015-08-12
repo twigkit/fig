@@ -50,32 +50,26 @@
         <url>https://github.com/twigkit/fig</url>
     </scm>
 
-    <repositories>
+	<repositories>
         <repository>
-            <id>repo.twigkit.com</id>
-            <name>TwigKit</name>
-            <url>http://twigkit.artifactoryonline.com/twigkit/repo/</url>
+            <id>twigkit.com</id>
+            <name>Twigkit</name>
+            <url>http://twigkit.artifactoryonline.com/twigkit/repo</url>
             <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
             </releases>
             <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
             </snapshots>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>repo.twigkit.com-releases</id>
+            <id>twigkit.com-releases</id>
             <name>TwigKit Releases</name>
             <url>http://twigkit.artifactoryonline.com/twigkit/release</url>
         </repository>
         <snapshotRepository>
-            <id>repo.twigkit.com-snapshots</id>
+            <id>twigkit.com-snapshots</id>
             <name>TwigKit Snapshots</name>
             <url>http://twigkit.artifactoryonline.com/twigkit/snapshot</url>
             <uniqueVersion>true</uniqueVersion>
