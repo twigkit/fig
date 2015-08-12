@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.util.FigUtils;
+import twigkit.fig.util.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -37,14 +39,20 @@ public class MergedPropertiesLoader implements Loader {
         // Load the primary fig
         new PropertiesLoader(pathToPrimaryFig).load(primaryFig);
 
-        // Load and merge the secondary fig into the primary
-        Fig secondaryFig = Fig.getInstance(new PropertiesLoader(pathToSecondaryFig));
+        File secondaryFigRootFolder = FileUtils.getResourceAsFile(pathToSecondaryFig);
 
-        if (secondaryFig.configs().size() != 0) {
-            // Merge the secondary fig into the primary fig.
-            FigUtils.mergeFig(primaryFig, secondaryFig);
+        if (secondaryFigRootFolder != null && secondaryFigRootFolder.exists()) {
+            // Load and merge the secondary fig into the primary
+            Fig secondaryFig = Fig.getInstance(new PropertiesLoader(pathToSecondaryFig));
+
+            if (secondaryFig.configs().size() != 0) {
+                // Merge the secondary fig into the primary fig.
+                FigUtils.mergeFig(primaryFig, secondaryFig);
+            } else {
+                logger.warn("No configs found at: {}. Using primary fig.", pathToSecondaryFig);
+            }
         } else {
-            logger.warn(("Failed to populate secondary config. Returning primary config unchanged."));
+            logger.warn("Fig folder not found: {}. Using primary fig.", pathToSecondaryFig);
         }
     }
 
