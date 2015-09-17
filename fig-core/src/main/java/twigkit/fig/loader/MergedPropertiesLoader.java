@@ -49,10 +49,10 @@ public class MergedPropertiesLoader implements Loader {
                 // Merge the secondary fig into the primary fig.
                 FigUtils.mergeFig(primaryFig, secondaryFig);
             } else {
-                logger.warn("No configs found at: {}. Using primary fig.", pathToSecondaryFig);
+                logger.trace("No configs found at: {}. Using primary fig.", pathToSecondaryFig);
             }
         } else {
-            logger.warn("Fig folder not found: {}. Using primary fig.", pathToSecondaryFig);
+            logger.trace("Fig folder not found: {}. Using primary fig.", pathToSecondaryFig);
         }
     }
 
