@@ -78,9 +78,19 @@ public class PropertiesLoader implements Loader {
         };
 
         File[] files = folder.listFiles(filter);
+
         Arrays.sort(files, new Comparator<File>() {
             public int compare(File file, File file1) {
-                return file.getName().compareTo(file1.getName());
+                int numberOfElementsInFilename = file.getName().split("[.]").length;
+                int numberOfElementsInFilename1 = file1.getName().split("[.]").length;
+
+                if (numberOfElementsInFilename < numberOfElementsInFilename1) {
+                    return -1;
+                } else if (numberOfElementsInFilename > numberOfElementsInFilename1) {
+                    return 1;
+                } else{
+                    return file.getName().compareTo(file1.getName());
+                }
             }
         });
 

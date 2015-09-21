@@ -236,4 +236,32 @@ public class PropertiesLoaderTest {
         Assert.assertNotNull(childConfig);
         Assert.assertNull(childConfig.parent());
     }
+
+    /**
+     * Previously, if a configuration contained an extension that alphabetically appeared before the name of the
+     * parent config, for example, parent.child.conf compared to parent.conf, parent.conf would appear after
+     * parent.child.conf and the latter would never be loaded. This test checks that the configurations are loaded
+     * by order of extension and not alphabetically.
+     */
+    @Test
+    public void testConfigsLoadByOrderOfExtension() {
+        Fig fig = Fig.getInstance(new PropertiesLoader("order"));
+        Assert.assertEquals(1, fig.configs().size());
+
+        Config parentConfig = fig.find("parent");
+        Assert.assertNotNull(parentConfig.parent());
+
+        // If the child configs were not loaded this next assertion would fail.
+        Assert.assertEquals(2, parentConfig.extensions().size());
+
+        Assert.assertNotNull(parentConfig.extension("child-1"));
+        Config childConfig = fig.find("child-1");
+        Assert.assertNotNull(childConfig);
+
+        Assert.assertNotNull(parentConfig.extension("child-1").extension("sibling-1"));
+        Config siblingConfig = fig.find("sibling-1");
+        Assert.assertNotNull(siblingConfig);
+
+        new ConfigTreeWriter(fig.get("order"));
+    }
 }
