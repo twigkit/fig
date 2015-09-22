@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
+import twigkit.fig.visitor.ConfigTreeWriter;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -66,5 +67,42 @@ public class MergedPropertiesLoaderTest {
         Fig fig = Fig.getInstance(loader);
 
         assertNotNull(fig);
+    }
+
+    @Test
+    public void testMergedPropertyHandlesDuplicates() {
+        Fig fig = Fig.getInstance(new PropertiesLoader("confs"));
+        assertNotNull(fig);
+
+        String valueRoot = "http://some-dev-internal-server.com/";
+
+        Config config = fig.get("companies");
+        assertEquals(valueRoot + "default-companies-search", config.value("host").as_string());
+        Config extension = config.extension("detail");
+        assertEquals(valueRoot + "default-companies-detail", extension.value("host").as_string());
+
+        config = fig.get("people");
+        assertEquals(valueRoot + "default-people-search", config.value("host").as_string());
+        extension = config.extension("detail");
+        assertEquals(valueRoot + "default-people-detail", extension.value("host").as_string());
+
+        new ConfigTreeWriter(fig.get("companies"));
+        new ConfigTreeWriter(fig.get("people"));
+
+        fig = Fig.getInstance(new MergedPropertiesLoader("confs", "confs_dev"));
+        assertNotNull(fig);
+
+        config = fig.get("companies");
+        assertEquals(valueRoot + "overlay-companies-search", config.value("host").as_string());
+        extension = config.extension("detail");
+        assertEquals(valueRoot + "overlay-companies-detail", extension.value("host").as_string());
+
+        config = fig.get("people");
+        assertEquals(valueRoot + "overlay-people-search", config.value("host").as_string());
+        extension = config.extension("detail");
+        assertEquals(valueRoot + "overlay-people-detail", extension.value("host").as_string());
+
+        new ConfigTreeWriter(fig.get("companies"));
+        new ConfigTreeWriter(fig.get("people"));
     }
 }

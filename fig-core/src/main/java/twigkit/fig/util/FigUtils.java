@@ -57,14 +57,28 @@ public class FigUtils {
 
         // Otherwise, update existing configs with new entries or new values.
         Map<String, Value> newConfig = config.map(true);
-        Map<String, Value> existingConfig = fig.find(config.name()).map(true);
+
+        List<Config> matchedConfigs = fig.findAll(config.name());
+        Config matchedConfig = matchedConfigs.get(0);
+
+        // Ensure that parent configs also match to handle child configs that have the same name.
+        if (matchedConfigs.size() > 1) {
+            for (Config c : matchedConfigs) {
+                if (c.parents() != null && c.parents().equals(config.parents())) {
+                    matchedConfig = c;
+                    break;
+                }
+            }
+        }
+
+        Map<String, Value> existingConfig = matchedConfig.map(true);
 
         for (Map.Entry<String, Value> entry : newConfig.entrySet()) {
             String key = entry.getKey();
             Value value = entry.getValue();
 
             if (!existingConfig.containsKey(key) || !existingConfig.get(key).equals(value)) {
-                fig.find(config.name()).set(key, value.get());
+                matchedConfig.set(key, value.get());
             }
         }
     }
