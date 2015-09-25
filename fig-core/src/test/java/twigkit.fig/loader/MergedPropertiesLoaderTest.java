@@ -62,15 +62,45 @@ public class MergedPropertiesLoaderTest {
     }
 
     @Test
-    public void testReturnNonNullWhenPathDoesNotExist() {
-        Loader loader = new MergedPropertiesLoader("confs", "invalid_path");
-        Fig fig = Fig.getInstance(loader);
+    public void testFallbackFigIsReturnedWhenTheOtherCannotBeFound() {
+        Fig fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig fig2 = Fig.getInstance(new MergedPropertiesLoader("confs", "invalid_path"));
 
-        assertNotNull(fig);
+        Iterator iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+
+        fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        fig2 = Fig.getInstance(new MergedPropertiesLoader("invalid_path", "confs"));
+
+        iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
     }
 
     @Test
-    public void testMergedPropertyHandlesDuplicates() {
+    public void testFallbackFigIsReturnedWhenTheOtherIsUndefined() {
+        Fig fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig fig2 = Fig.getInstance(new MergedPropertiesLoader("confs", null));
+
+        Iterator iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+
+        fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        fig2 = Fig.getInstance(new MergedPropertiesLoader(null, "confs"));
+
+        iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+    }
+
+    @Test
+    public void testExtensionsWithTheSameNameUnderDifferentParentConfigsAreHandledCorrectly() {
         Fig fig = Fig.getInstance(new PropertiesLoader("confs"));
         assertNotNull(fig);
 
@@ -95,7 +125,7 @@ public class MergedPropertiesLoaderTest {
         config = fig.get("companies");
         assertEquals(valueRoot + "overlay-companies-search", config.value("host").as_string());
         extension = config.extension("detail");
-        assertEquals(valueRoot + "overlay-companies-detail", extension.value("host").as_string());
+        assertEquals(valueRoot + "overlay-companies-search", extension.value("host").as_string());
 
         config = fig.get("people");
         assertEquals(valueRoot + "overlay-people-search", config.value("host").as_string());

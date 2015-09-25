@@ -21,7 +21,7 @@ public class FigUtilsTest {
         String originalRoot1KeyValue = primary.find("root").value("root-1-key").as_string();
         String originalExtension2Value = primary.find("extension-2").value("root-1-key").as_string();
 
-        FigUtils.mergeFig(primary, secondary);
+        FigUtils.merge(primary, secondary);
 
         // Expect the primary root config to have been updated
         Config updatedPrimaryRootConfig = primary.find("root");
@@ -41,7 +41,7 @@ public class FigUtilsTest {
         Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
-        FigUtils.mergeFig(primary, secondary);
+        FigUtils.merge(primary, secondary);
 
         // Expect the primary root config value "root-2-key" to be updated
         assertEquals("root-2-new-value", primary.find("root").value("root-2-key").as_string());
@@ -58,7 +58,7 @@ public class FigUtilsTest {
         Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
-        FigUtils.mergeFig(primary, secondary);
+        FigUtils.merge(primary, secondary);
 
         // Expect there to be a new primary root config value "root-3-key"
         Config updatedPrimaryRootConfig = primary.find("root");
@@ -73,7 +73,7 @@ public class FigUtilsTest {
         Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
-        FigUtils.mergeFig(primary, secondary);
+        FigUtils.merge(primary, secondary);
 
         // Expect there to be a new primary extension config
         assertEquals("ex-3-value", primary.find("extension-3").value("ex-3-key").as_string());
@@ -84,7 +84,7 @@ public class FigUtilsTest {
         Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
-        FigUtils.mergeFig(primary, secondary);
+        FigUtils.merge(primary, secondary);
 
         assertNotNull(primary.get("new_sub"));
         assertEquals("newsub-1-value", primary.find("new_sub").value("newsub-1-key").as_string());
@@ -95,8 +95,20 @@ public class FigUtilsTest {
         Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
-        FigUtils.mergeFig(primary, secondary);
+        FigUtils.merge(primary, secondary);
 
         assertEquals("sub-1-new-value", primary.find("group").value("sub-1-key").as_string());
+    }
+
+    @Test
+    public void testFigRemainsUnchangedWhenMergingNullFig() {
+        Fig fig = Fig.getInstance(new PropertiesLoader("confs_dev"));
+        assertEquals(5, fig.configs().size());
+
+        FigUtils.merge(null, fig);
+        assertEquals(5, fig.configs().size());
+
+        FigUtils.merge(fig, null);
+        assertEquals(5, fig.configs().size());
     }
 }

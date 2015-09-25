@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * The MergedPropertiesLoader loads two {@link Fig}s, a primary and a secondary. Then merges the two by passing over
+ * the properties in the secondary over to the primary {@link Fig}.
+ *
  * @author scottbrown
  */
 public class MergedPropertiesLoader implements Loader {
@@ -27,32 +30,29 @@ public class MergedPropertiesLoader implements Loader {
     }
 
     /**
-     * This method firstly populates the given Fig instance with configurations found
-     * under the primary root path stored by this loader. Then it populates a second
-     * Fig instance with configurations found under the secondary root path stored by
-     * this loader. Finally, it merges the configurations found under the secondary root
-     * into the configurations found under the primary root.
+     * This method loads the given primary {@link Fig} and a second {@link Fig} then merges the second {@link Fig}
+     * with the primary {@link Fig}.
      *
-     * @param primaryFig The primary Fig instance
+     * @param fig The primary {@link Fig}
      */
-    public void load(Fig primaryFig) {
-        // Load the primary fig
-        new PropertiesLoader(pathToPrimaryFig).load(primaryFig);
+    public void load(Fig fig) {
+        if (pathToPrimaryFig != null) {
+            new PropertiesLoader(pathToPrimaryFig).load(fig);
 
-        File secondaryFigRootFolder = FileUtils.getResourceAsFile(pathToSecondaryFig);
+            if (pathToSecondaryFig != null) {
+                File secondaryFigRootFolder = FileUtils.getResourceAsFile(pathToSecondaryFig);
 
-        if (secondaryFigRootFolder != null && secondaryFigRootFolder.exists()) {
-            // Load and merge the secondary fig into the primary
-            Fig secondaryFig = Fig.getInstance(new PropertiesLoader(pathToSecondaryFig));
-
-            if (secondaryFig.configs().size() != 0) {
-                // Merge the secondary fig into the primary fig.
-                FigUtils.mergeFig(primaryFig, secondaryFig);
+                if (secondaryFigRootFolder != null && secondaryFigRootFolder.exists()) {
+                    FigUtils.merge(fig, Fig.getInstance(new PropertiesLoader(pathToSecondaryFig)));
+                } else {
+                    logger.trace("Secondary fig {} not found. Falling back to primary.", pathToSecondaryFig);
+                }
             } else {
-                logger.trace("No configs found at: {}. Using primary fig.", pathToSecondaryFig);
+                logger.trace("Secondary fig {} not found. Falling back to primary.", pathToSecondaryFig);
             }
         } else {
-            logger.trace("Fig folder not found: {}. Using primary fig.", pathToSecondaryFig);
+            logger.trace("Primary fig {} not found. Falling back to secondary", pathToPrimaryFig);
+            new PropertiesLoader(pathToSecondaryFig).load(fig);
         }
     }
 

@@ -4,8 +4,11 @@ import twigkit.fig.annotation.InjectionConfigurator;
 import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigFinder;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A {@link Fig} is a forest of root {@link Config}s, backed by an <em>ordered</em>list of
@@ -177,28 +180,6 @@ public class Fig {
 		}
 
 		return config;
-	}
-
-	/**
-	 * Find all {@link Config}s that match the given name, traversing the hierarchy of {@link Config}s and their
-	 * extensions.
-	 * @param   name   The name of the {@link Config} to be found.
-	 * @return a list of {@link Config}s that have the given name. If no {@link Config}s can be found an
-	 * empty list is returned.
-	 */
-	public List<Config> findAll(String name) {
-		List<Config> matchedConfigs = new ArrayList<Config>();
-
-        for (Config c : configs()) {
-            ConfigFinder finder = new ConfigFinder(name);
-            c.accept(finder);
-
-            if (finder.getConfig() != null) {
-                matchedConfigs.add(finder.getConfig());
-            }
-        }
-
-		return matchedConfigs;
 	}
 
     /**
