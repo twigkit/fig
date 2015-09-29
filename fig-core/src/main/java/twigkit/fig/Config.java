@@ -141,9 +141,14 @@ public class Config implements Serializable {
      * @return
      */
     public Config  extend_with(Config configuration) {
-        configuration.parents().addAll(parents());
-        configuration.parent(this);
-        configuration.loader = loader;
+        if (configuration.parents().isEmpty()) {
+            configuration.parents().addAll(parents());
+            configuration.parent(this);
+        }
+
+        if (configuration.loader == null) {
+            configuration.loader = loader;
+        }
 
         extensions.put(configuration.name(), configuration);
         return this;

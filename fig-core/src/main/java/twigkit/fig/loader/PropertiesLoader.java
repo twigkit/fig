@@ -5,11 +5,24 @@ import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
 import twigkit.fig.Value;
-import twigkit.fig.util.FigUtils;
 import twigkit.fig.util.FileUtils;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 public class PropertiesLoader implements Loader {
@@ -78,9 +91,19 @@ public class PropertiesLoader implements Loader {
         };
 
         File[] files = folder.listFiles(filter);
+
         Arrays.sort(files, new Comparator<File>() {
             public int compare(File file, File file1) {
-                return file.getName().compareTo(file1.getName());
+                int numberOfElementsInFilename = file.getName().split("[.]").length;
+                int numberOfElementsInFilename1 = file1.getName().split("[.]").length;
+
+                if (numberOfElementsInFilename < numberOfElementsInFilename1) {
+                    return -1;
+                } else if (numberOfElementsInFilename > numberOfElementsInFilename1) {
+                    return 1;
+                } else{
+                    return file.getName().compareTo(file1.getName());
+                }
             }
         });
 

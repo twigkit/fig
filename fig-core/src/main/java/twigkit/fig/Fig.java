@@ -4,8 +4,11 @@ import twigkit.fig.annotation.InjectionConfigurator;
 import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigFinder;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A {@link Fig} is a forest of root {@link Config}s, backed by an <em>ordered</em>list of

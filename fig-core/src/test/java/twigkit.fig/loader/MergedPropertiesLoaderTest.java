@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
+import twigkit.fig.visitor.ConfigTreeWriter;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -61,10 +62,77 @@ public class MergedPropertiesLoaderTest {
     }
 
     @Test
-    public void testReturnNonNullWhenPathDoesNotExist() {
-        Loader loader = new MergedPropertiesLoader("confs", "invalid_path");
-        Fig fig = Fig.getInstance(loader);
+    public void testFallbackFigIsReturnedWhenTheOtherCannotBeFound() {
+        Fig fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig fig2 = Fig.getInstance(new MergedPropertiesLoader("confs", "invalid_path"));
 
+        Iterator iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+
+        fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        fig2 = Fig.getInstance(new MergedPropertiesLoader("invalid_path", "confs"));
+
+        iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+    }
+
+    @Test
+    public void testFallbackFigIsReturnedWhenTheOtherIsUndefined() {
+        Fig fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig fig2 = Fig.getInstance(new MergedPropertiesLoader("confs", null));
+
+        Iterator iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+
+        fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        fig2 = Fig.getInstance(new MergedPropertiesLoader(null, "confs"));
+
+        iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+    }
+
+    @Test
+    public void testExtensionsWithTheSameNameUnderDifferentParentConfigsAreHandledCorrectly() {
+        Fig fig = Fig.getInstance(new PropertiesLoader("confs"));
         assertNotNull(fig);
+
+        String valueRoot = "http://some-dev-internal-server.com/";
+
+        Config config = fig.get("companies");
+        assertEquals(valueRoot + "default-companies-search", config.value("host").as_string());
+        Config extension = config.extension("detail");
+        assertEquals(valueRoot + "default-companies-detail", extension.value("host").as_string());
+
+        config = fig.get("people");
+        assertEquals(valueRoot + "default-people-search", config.value("host").as_string());
+        extension = config.extension("detail");
+        assertEquals(valueRoot + "default-people-detail", extension.value("host").as_string());
+
+        new ConfigTreeWriter(fig.get("companies"));
+        new ConfigTreeWriter(fig.get("people"));
+
+        fig = Fig.getInstance(new MergedPropertiesLoader("confs", "confs_dev"));
+        assertNotNull(fig);
+
+        config = fig.get("companies");
+        assertEquals(valueRoot + "overlay-companies-search", config.value("host").as_string());
+        extension = config.extension("detail");
+        assertEquals(valueRoot + "overlay-companies-search", extension.value("host").as_string());
+
+        config = fig.get("people");
+        assertEquals(valueRoot + "overlay-people-search", config.value("host").as_string());
+        extension = config.extension("detail");
+        assertEquals(valueRoot + "overlay-people-detail", extension.value("host").as_string());
+
+        new ConfigTreeWriter(fig.get("companies"));
+        new ConfigTreeWriter(fig.get("people"));
     }
 }
