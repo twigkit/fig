@@ -43,7 +43,9 @@ public class MergedPropertiesLoader implements Loader {
                 File secondaryFigRootFolder = FileUtils.getResourceAsFile(pathToSecondaryFig);
 
                 if (secondaryFigRootFolder != null && secondaryFigRootFolder.exists()) {
-                    FigUtils.merge(fig, Fig.getInstance(new PropertiesLoader(pathToSecondaryFig)));
+                    Fig secondaryFig = Fig.getInstance(new PropertiesLoader(pathToSecondaryFig));
+                    secondaryFig.reload(); // ensure the secondary fig is up-to-date
+                    FigUtils.merge(fig, secondaryFig);
                 } else {
                     logger.trace("Secondary fig {} not found. Falling back to primary.", pathToSecondaryFig);
                 }
