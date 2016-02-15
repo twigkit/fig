@@ -71,6 +71,8 @@ public class Fig {
      * the {@link Loader} instances in sequence.
      */
     public void reload() {
+		this.configs = new LinkedHashMap<String, Config>();
+
         for (Loader l : loaders) {
             l.load(this);
         }
