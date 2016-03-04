@@ -1,0 +1,24 @@
+<settings>
+    <servers>
+        <server>
+            <id>twigkit.com</id>
+            <username>travis</username>
+            <password>AP5DCo7pQffntAZ</password>
+        </server>
+        <server>
+            <id>twigkit.com-releases</id>
+            <username>travis</username>
+            <password>AP5DCo7pQffntAZ</password>
+        </server>
+        <server>
+            <id>twigkit.com-snapshots</id>
+            <username>travis</username>
+            <password>AP5DCo7pQffntAZ</password>
+        </server>
+        <server>
+            <id>archetype</id>
+            <username>travis</username>
+            <password>AP5DCo7pQffntAZ</password>
+        </server>
+    </servers>
+</settings>
