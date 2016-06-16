@@ -50,9 +50,14 @@ public class Config implements Serializable {
         if (has(name)) {
             return values.get(name);
         }
-        for (Config conf : parents()) {
-            if (conf.has(name)) {
-                return conf.value(name);
+
+        List<Config> parents = parents();
+        if (parents != null && parents.size() > 0) {
+            for (int i = parents.size() - 1; i >= 0; i--) {
+                Config conf = parents.get(i);
+                if (conf.has(name)) {
+                    return conf.value(name);
+                }
             }
         }
 

@@ -38,6 +38,14 @@ public class ConfigTest {
     }
 
     @Test
+    public void testInheritedValue() {
+        Config conf = sample().extension("extension-1", "extension-1-1", "extension-1-1-1");
+        Assert.assertNotNull(conf);
+        Assert.assertNotNull(conf.value("ex-1-key"));
+        Assert.assertEquals("ex-1-value-override", conf.value("ex-1-key").as_string());
+    }
+
+    @Test
     public void createConfiguration() {
         Config conf = new Config("level1");
         conf.set("name1", "value1").set("name2", "value2");
