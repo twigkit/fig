@@ -225,6 +225,7 @@ public class PropertiesLoader implements Loader {
      */
     public void write(Config config) throws IOException {
         File file = fileForConfig(config);
+        logger.debug("Writing to file for config {}", file.getAbsolutePath());
         write(config, file);
     }
 
@@ -260,6 +261,7 @@ public class PropertiesLoader implements Loader {
             Iterator<Config> parentIterator = config.parents().iterator();
             logger.debug("Existing file not found for config [{}], creating...", config.path());
             File f = findFolderForConfig(parentIterator, config, rootFolder);
+            logger.debug("Returning file [{}]", f.getAbsolutePath());
             return f;
         }
     }
@@ -303,6 +305,8 @@ public class PropertiesLoader implements Loader {
                     }
                 }
             }
+        } else {
+            folder = new File(folder, config.name());
         }
         return folder;
     }
