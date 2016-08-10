@@ -36,25 +36,35 @@ public class MergedPropertiesLoader implements Loader {
      * @param fig The primary {@link Fig}
      */
     public void load(Fig fig) {
-        if (pathToPrimaryFig != null) {
+        if (pathToPrimaryFig != null && !pathToPrimaryFig.isEmpty()) {
             new PropertiesLoader(pathToPrimaryFig).load(fig);
+            logger.trace("Primary fig loaded.");
 
-            if (pathToSecondaryFig != null) {
+            if (pathToSecondaryFig != null && !pathToSecondaryFig.isEmpty()) {
                 File secondaryFigRootFolder = FileUtils.getResourceAsFile(pathToSecondaryFig);
 
                 if (secondaryFigRootFolder != null && secondaryFigRootFolder.exists()) {
                     Fig secondaryFig = Fig.getInstance(new PropertiesLoader(pathToSecondaryFig));
                     secondaryFig.reload(); // ensure the secondary fig is up-to-date
+                    logger.trace("Secondary fig loaded.");
+
                     FigUtils.merge(fig, secondaryFig);
+                    logger.trace("Secondary fig merged with primary fig.");
                 } else {
-                    logger.trace("Secondary fig {} not found. Falling back to primary.", pathToSecondaryFig);
+                    logger.debug("Path to secondary fig: \"{}\" is invalid. Falling back to primary.", pathToSecondaryFig);
                 }
             } else {
-                logger.trace("Secondary fig {} not found. Falling back to primary.", pathToSecondaryFig);
+                logger.debug("Path to secondary fig: \"{}\" is invalid. Falling back to primary.", pathToSecondaryFig);
             }
         } else {
-            logger.trace("Primary fig {} not found. Falling back to secondary", pathToPrimaryFig);
-            new PropertiesLoader(pathToSecondaryFig).load(fig);
+            logger.debug("Path to primary fig: \"{}\" is invalid. Attempting to load secondary...", pathToPrimaryFig);
+
+            if (pathToSecondaryFig != null && !pathToSecondaryFig.isEmpty()) {
+                new PropertiesLoader(pathToSecondaryFig).load(fig);
+                logger.trace("Secondary fig loaded");
+            } else {
+                logger.error("Both the path to the primary fig: \"{}\" and the path to the secondary fig: \"{}\" are invalid. Unable to load configurations.", pathToPrimaryFig, pathToSecondaryFig);
+            }
         }
     }
 

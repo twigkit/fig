@@ -135,4 +135,29 @@ public class MergedPropertiesLoaderTest {
         new ConfigTreeWriter(fig.get("companies"));
         new ConfigTreeWriter(fig.get("people"));
     }
+
+    @Test
+    public void testFallbackFigIsReturnedWhenTheOtherIsEmpty() {
+        Fig fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        Fig fig2 = Fig.getInstance(new MergedPropertiesLoader("confs", ""));
+
+        Iterator iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+
+        fig1 = Fig.getInstance(new PropertiesLoader("confs"));
+        fig2 = Fig.getInstance(new MergedPropertiesLoader("", "confs"));
+
+        iterator = fig1.configs().iterator();
+        for (Config config2 : fig2.configs()) {
+            assertEquals(iterator.next(), config2);
+        }
+    }
+
+    @Test
+    public void testFigIsEmptyWhenBothPrimaryAndSecondaryFigPathsAreEmpty() {
+        Fig fig = Fig.getInstance(new MergedPropertiesLoader("", ""));
+        assertEquals(fig.configs().size(), 0);
+    }
 }
