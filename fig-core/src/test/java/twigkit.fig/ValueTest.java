@@ -66,4 +66,16 @@ public class ValueTest {
         Assert.assertEquals(v1.hashCode(), v2.hashCode());
         Assert.assertFalse(v1.hashCode() == v3.hashCode());
     }
+
+    @Test
+    public void testEmptyValues() {
+        Value v1 = new Value().label("attr1").set("");
+
+        Assert.assertEquals("", v1.as_string());
+        Assert.assertEquals(0L, v1.as_long());
+        Assert.assertEquals(0, v1.as_int());
+        Assert.assertEquals(0d, v1.as_double(), 0.00001);
+        Assert.assertEquals(0f, v1.as_float(), 0.00001);
+        Assert.assertFalse(v1.as_boolean());
+    }
 }
