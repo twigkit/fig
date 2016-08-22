@@ -2,6 +2,7 @@ package twigkit.fig;
 
 import twigkit.fig.annotation.InjectionConfigurator;
 import twigkit.fig.loader.Loader;
+import twigkit.fig.util.ConfigUtils;
 import twigkit.fig.visitor.ConfigFinder;
 
 import java.util.Arrays;
@@ -112,16 +113,9 @@ public class Fig {
 			if (!configs.containsKey(path[0])) {
 				add(new Config(path[0], config.loader));
 			}
+
 			Config parent = configs.get(path[0]);
-			for (int i = 1; i < path.length - 1; i++) {
-				Config c = parent.extension(path[i]);
-				if (c == null && i < path.length) {
-					c = new Config(path[i]);
-					parent.extend_with(c);
-				}
-                parent = c;
-			}
-			parent.extend_with(config);
+			ConfigUtils.addToParent(config, parent, path);
 		}
 
 		return this;

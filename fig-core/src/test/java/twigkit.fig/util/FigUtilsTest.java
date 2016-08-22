@@ -3,7 +3,10 @@ package twigkit.fig.util;
 import org.junit.Test;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
+import twigkit.fig.loader.MergedPropertiesLoader;
 import twigkit.fig.loader.PropertiesLoader;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -110,5 +113,22 @@ public class FigUtilsTest {
 
         FigUtils.merge(fig, null);
         assertEquals(5, fig.configs().size());
+    }
+
+    @Test
+    public void testMergingCollectionOfConfigsIntoFig() {
+        PropertiesLoader loader = new PropertiesLoader("confs");
+        Fig fig = Fig.getInstance(loader);
+
+        String configsToMerge = "people.detail[enabled:true&sub.group.folder-extension[group-folder-extension-key:test";
+        List<Config> configs = ConfigUtils.asList(configsToMerge, loader);
+
+        FigUtils.mergeConfigs(fig, configs);
+
+        assertEquals(2, fig.get("people", "detail").values().size());
+        assertEquals("true", fig.get("people", "detail").value("enabled").as_string());
+
+        assertEquals(2, fig.get("sub", "group", "folder-extension").values().size());
+        assertEquals("test", fig.get("sub", "group", "folder-extension").value("group-folder-extension-key").as_string());
     }
 }

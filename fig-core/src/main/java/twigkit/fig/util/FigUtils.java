@@ -28,6 +28,17 @@ public class FigUtils {
     }
 
     /**
+     * Merge a collection of {@link Config}s into a primary {@link Fig}.
+     * @param primary The {@link Fig} to be updated.
+     * @param configs The {@link Config}s to be merged.
+     */
+    public static void mergeConfigs(Fig primary, Collection<Config> configs) {
+        if (primary != null && configs != null) {
+            merge(primary, primary.configs(), configs);
+        }
+    }
+
+    /**
      * Merge a collection of secondary {@link Config}s into a collection of primary {@link Config}s.
      * @param fig The {@link Fig} to be updated.
      * @param primaryConfigs   The {@link Config}s to be updated.

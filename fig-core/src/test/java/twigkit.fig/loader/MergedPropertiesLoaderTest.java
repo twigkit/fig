@@ -5,10 +5,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
+import twigkit.fig.util.ConfigUtils;
+import twigkit.fig.util.FigUtils;
 import twigkit.fig.visitor.ConfigTreeWriter;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -134,6 +137,22 @@ public class MergedPropertiesLoaderTest {
 
         new ConfigTreeWriter(fig.get("companies"));
         new ConfigTreeWriter(fig.get("people"));
+    }
+
+    @Test
+    public void testMergedPropertiesLoaderMergesConfigList() {
+        MergedPropertiesLoader loader = new MergedPropertiesLoader("confs", "confs_dev");
+
+        String configsToMerge = "people.detail[enabled:true&sub.group.folder-extension[group-folder-extension-key:test";
+        loader.setConfigsToMerge(configsToMerge);
+
+        Fig fig = Fig.getInstance(loader);
+
+        assertEquals(2, fig.get("people", "detail").values().size());
+        assertEquals("true", fig.get("people", "detail").value("enabled").as_string());
+
+        assertEquals(2, fig.get("sub", "group", "folder-extension").values().size());
+        assertEquals("test", fig.get("sub", "group", "folder-extension").value("group-folder-extension-key").as_string());
     }
 
     @Test

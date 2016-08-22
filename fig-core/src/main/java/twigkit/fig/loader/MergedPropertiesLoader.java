@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
+import twigkit.fig.util.ConfigUtils;
 import twigkit.fig.util.FigUtils;
 import twigkit.fig.util.FileUtils;
 
@@ -23,6 +24,7 @@ public class MergedPropertiesLoader implements Loader {
 
     private String pathToPrimaryFig;
     private String pathToSecondaryFig;
+    private String configsToMerge;
 
     public MergedPropertiesLoader(String pathToPrimaryFig, String pathToSecondaryFig) {
         this.pathToPrimaryFig = pathToPrimaryFig;
@@ -30,8 +32,11 @@ public class MergedPropertiesLoader implements Loader {
     }
 
     /**
-     * This method loads the given primary {@link Fig} and a second {@link Fig} then merges the second {@link Fig}
-     * with the primary {@link Fig}.
+     * This method first loads the given primary {@link Fig} and a second {@link Fig} then merges the
+     * second {@link Fig} with the primary {@link Fig}.
+     *
+     * Any additional configurations set on the {@link Loader} that are not part of the secondary {@link Fig}
+     * will also be merged with the primary {@link Fig} once the secondary {@link Fig} has been merged.
      *
      * @param fig The primary {@link Fig}
      */
@@ -66,6 +71,10 @@ public class MergedPropertiesLoader implements Loader {
                 logger.error("Both the path to the primary fig: \"{}\" and the path to the secondary fig: \"{}\" are invalid. Unable to load configurations.", pathToPrimaryFig, pathToSecondaryFig);
             }
         }
+
+        if (configsToMerge != null) {
+            FigUtils.mergeConfigs(fig, ConfigUtils.asList(configsToMerge, this));
+        }
     }
 
     public void write(Config config) throws IOException {
@@ -74,5 +83,22 @@ public class MergedPropertiesLoader implements Loader {
 
     public void delete(Config config) throws IOException {
         throw new IOException("Delete operation not supported.");
+    }
+
+    /**
+     * Set a config or sequence of configs that should be merged with the primary {@link Fig} after merging the
+     * secondary {@link Fig}. A config should be given in the following form:
+     *
+     * parent.child[property:value
+     *
+     * If more than one config is to be merged, subsequent configs should be separated with an ampersand, for
+     * example:
+     *
+     * parent.child[property:value&parent[property:value
+     *
+     * @param configsToMerge The config or sequence of configs to be merged with the primary {@link Fig}.
+     */
+    public void setConfigsToMerge(String configsToMerge) {
+        this.configsToMerge = configsToMerge;
     }
 }
