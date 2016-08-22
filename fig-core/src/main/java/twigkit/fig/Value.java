@@ -87,7 +87,9 @@ public class Value<T> implements Serializable {
 			if (value instanceof Integer) {
 				return (Integer) value;
 			} else {
-				return Integer.parseInt(as_string());
+				if (!as_string().isEmpty()) {
+					return Integer.parseInt(as_string());
+				}
 			}
 		}
 
@@ -104,11 +106,13 @@ public class Value<T> implements Serializable {
 			if (value instanceof Long) {
 				return (Long) value;
 			} else {
-				return Long.parseLong(as_string());
+				if (!as_string().isEmpty()) {
+					return Long.parseLong(as_string());
+				}
 			}
 		}
 
-		return 0l;
+		return 0L;
 	}
 
 	/**
@@ -121,7 +125,9 @@ public class Value<T> implements Serializable {
 			if (value instanceof Float) {
 				return (Float) value;
 			} else {
-				return Float.parseFloat(as_string());
+				if (!as_string().isEmpty()) {
+					return Float.parseFloat(as_string());
+				}
 			}
 		}
 
@@ -138,7 +144,9 @@ public class Value<T> implements Serializable {
 			if (value instanceof Double) {
 				return (Double) value;
 			} else {
-				return Double.parseDouble(as_string());
+				if (!as_string().isEmpty()) {
+					return Double.parseDouble(as_string());
+				}
 			}
 		}
 		return 0d;
