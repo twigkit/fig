@@ -21,10 +21,12 @@ public class MergedPropertiesLoader implements Loader {
 
     private static final Logger logger = LoggerFactory.getLogger(MergedPropertiesLoader.class);
 
-    private String pathToPrimaryFig;
+    private Loader primary;
     private String pathToSecondaryFig;
+    private String pathToPrimaryFig;
 
     public MergedPropertiesLoader(String pathToPrimaryFig, String pathToSecondaryFig) {
+        this.primary = (pathToPrimaryFig != null && !pathToPrimaryFig.isEmpty()) ? new PropertiesLoader(pathToPrimaryFig) : null;
         this.pathToPrimaryFig = pathToPrimaryFig;
         this.pathToSecondaryFig = pathToSecondaryFig;
     }
@@ -36,9 +38,9 @@ public class MergedPropertiesLoader implements Loader {
      * @param fig The primary {@link Fig}
      */
     public void load(Fig fig) {
-        if (pathToPrimaryFig != null && !pathToPrimaryFig.isEmpty()) {
-            new PropertiesLoader(pathToPrimaryFig).load(fig);
-            logger.trace("Primary fig loaded.");
+        if (primary != null) {
+            primary.load(fig);
+            logger.trace("Primary fig loaded");
 
             if (pathToSecondaryFig != null && !pathToSecondaryFig.isEmpty()) {
                 File secondaryFigRootFolder = FileUtils.getResourceAsFile(pathToSecondaryFig);
@@ -46,10 +48,10 @@ public class MergedPropertiesLoader implements Loader {
                 if (secondaryFigRootFolder != null && secondaryFigRootFolder.exists()) {
                     Fig secondaryFig = Fig.getInstance(new PropertiesLoader(pathToSecondaryFig));
                     secondaryFig.reload(); // ensure the secondary fig is up-to-date
-                    logger.trace("Secondary fig loaded.");
+                    logger.trace("Secondary fig loaded");
 
                     FigUtils.merge(fig, secondaryFig);
-                    logger.trace("Secondary fig merged with primary fig.");
+                    logger.trace("Secondary fig merged with primary fig");
                 } else {
                     logger.debug("Path to secondary fig: \"{}\" is invalid. Falling back to primary.", pathToSecondaryFig);
                 }
@@ -69,10 +71,14 @@ public class MergedPropertiesLoader implements Loader {
     }
 
     public void write(Config config) throws IOException {
-        throw new IOException("Write operation not supported.");
+        if (primary != null) {
+            primary.write(config);
+        }
     }
 
     public void delete(Config config) throws IOException {
-        throw new IOException("Delete operation not supported.");
+        if (primary != null) {
+            primary.delete(config);
+        }
     }
 }
