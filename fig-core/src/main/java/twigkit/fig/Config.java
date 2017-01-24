@@ -3,6 +3,8 @@ package twigkit.fig;
 import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigVisitor;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
@@ -10,11 +12,17 @@ import java.util.*;
 /**
  * @author mr.olafsson
  */
+@XmlRootElement
 public class Config implements Serializable {
 
+    @XmlElement
     private String name;
     private List<Config> parents;
+
+    @XmlElement
     private Map<String, Config> extensions;
+
+    @XmlElement
     private Map<String, Value> values;
     protected Loader loader;
 

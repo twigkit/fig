@@ -1,14 +1,20 @@
 package twigkit.fig;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
  * @param <T>
  */
+@XmlRootElement
 public class Value<T> implements Serializable {
 
+	@XmlElement
 	private String label;
+	@XmlElement
 	private T value;
+	@XmlElement
 	private boolean required;
 
 	public Value() {
