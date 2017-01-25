@@ -24,20 +24,14 @@ public class PropertiesLoaderTest {
 
     private String copyToTempFolder(String node) throws Exception {
         File source = FileUtils.getResourceAsFile(node);
-
         File destination = new File(tempFolder.getRoot(), source.getName());
-        System.out.println("Source is " + source.getAbsolutePath());
-        System.out.println("Destination is " + destination.getAbsolutePath());
         org.apache.commons.io.FileUtils.copyDirectoryToDirectory(source, destination.getParentFile());
-        System.out.println("Success? " + destination.exists());
-        return  FileUtils.FILE_PROTOCOL + source.getAbsolutePath();
+        return  FileUtils.FILE_PROTOCOL + destination.getAbsolutePath();
     }
 
     @Before
     public void setUp() throws Exception {
         cl = Thread.currentThread().getContextClassLoader();
-        tempFolder.create();
-        tempFolder.getRoot().mkdirs();
     }
 
     @Test
@@ -88,13 +82,8 @@ public class PropertiesLoaderTest {
     @Test
     public void testDelete() throws Exception {
         String figPath = copyToTempFolder("confs");
-        System.out.println(figPath);
         PropertiesLoader loader = new PropertiesLoader(figPath);
         Fig fig = Fig.getInstance(loader);
-        System.out.println(fig.configs().size());
-        for (Config config: fig.configs()) {
-            System.out.println("\t" + config.name());
-        }
         Config root = fig.get("delete");
 
         Config a = new Config("a");

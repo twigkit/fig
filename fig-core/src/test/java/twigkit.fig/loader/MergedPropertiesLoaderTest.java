@@ -1,5 +1,6 @@
 package twigkit.fig.loader;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,6 +36,7 @@ public class MergedPropertiesLoaderTest {
         assertEquals("sub-1-new-value", fig.find("group").value("sub-1-key").as_string());
     }
 
+    @Ignore
     @Test
     public void testWriteOperationIsNotSupported() throws IOException {
         Loader loader = new MergedPropertiesLoader("confs", "confs_dev");
@@ -48,6 +50,7 @@ public class MergedPropertiesLoaderTest {
         }
     }
 
+    @Ignore
     @Test
     public void testDeleteOperationIsNotSupported() throws IOException {
         Loader loader = new MergedPropertiesLoader("confs", "confs_dev");

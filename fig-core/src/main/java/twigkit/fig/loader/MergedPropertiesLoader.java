@@ -21,12 +21,10 @@ public class MergedPropertiesLoader implements Loader {
 
     private static final Logger logger = LoggerFactory.getLogger(MergedPropertiesLoader.class);
 
-    private Loader primary;
-    private String pathToSecondaryFig;
     private String pathToPrimaryFig;
+    private String pathToSecondaryFig;
 
     public MergedPropertiesLoader(String pathToPrimaryFig, String pathToSecondaryFig) {
-        this.primary = (pathToPrimaryFig != null && !pathToPrimaryFig.isEmpty()) ? new PropertiesLoader(pathToPrimaryFig) : null;
         this.pathToPrimaryFig = pathToPrimaryFig;
         this.pathToSecondaryFig = pathToSecondaryFig;
     }
@@ -38,9 +36,9 @@ public class MergedPropertiesLoader implements Loader {
      * @param fig The primary {@link Fig}
      */
     public void load(Fig fig) {
-        if (primary != null) {
-            primary.load(fig);
-            logger.trace("Primary fig loaded");
+        if (pathToPrimaryFig != null && !pathToPrimaryFig.isEmpty()) {
+            new PropertiesLoader(pathToPrimaryFig).load(fig);
+            logger.trace("Primary fig loaded.");
 
             if (pathToSecondaryFig != null && !pathToSecondaryFig.isEmpty()) {
                 File secondaryFigRootFolder = FileUtils.getResourceAsFile(pathToSecondaryFig);
@@ -71,14 +69,14 @@ public class MergedPropertiesLoader implements Loader {
     }
 
     public void write(Config config) throws IOException {
-        if (primary != null) {
-            primary.write(config);
+        if (pathToPrimaryFig != null && !pathToPrimaryFig.isEmpty()) {
+            new PropertiesLoader(pathToPrimaryFig).write(config);
         }
     }
 
     public void delete(Config config) throws IOException {
-        if (primary != null) {
-            primary.delete(config);
+        if (pathToPrimaryFig != null && !pathToPrimaryFig.isEmpty()) {
+            new PropertiesLoader(pathToPrimaryFig).delete(config);
         }
     }
 }
