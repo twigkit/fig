@@ -23,10 +23,15 @@ public class MergedPropertiesLoader implements Loader {
 
     private String pathToPrimaryFig;
     private String pathToSecondaryFig;
+    private PropertiesLoader primaryLoader;
 
     public MergedPropertiesLoader(String pathToPrimaryFig, String pathToSecondaryFig) {
         this.pathToPrimaryFig = pathToPrimaryFig;
         this.pathToSecondaryFig = pathToSecondaryFig;
+    }
+
+    public PropertiesLoader getPrimaryLoader() {
+        return primaryLoader;
     }
 
     /**
@@ -37,7 +42,8 @@ public class MergedPropertiesLoader implements Loader {
      */
     public void load(Fig fig) {
         if (pathToPrimaryFig != null && !pathToPrimaryFig.isEmpty()) {
-            new PropertiesLoader(pathToPrimaryFig).load(fig);
+            this.primaryLoader = new PropertiesLoader(pathToPrimaryFig);
+            this.primaryLoader.load(fig);
             logger.trace("Primary fig loaded.");
 
             if (pathToSecondaryFig != null && !pathToSecondaryFig.isEmpty()) {

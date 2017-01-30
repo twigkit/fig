@@ -1,8 +1,11 @@
 package twigkit.fig;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import twigkit.fig.loader.Loader;
 import twigkit.fig.visitor.ConfigVisitor;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
@@ -13,10 +16,13 @@ import java.util.*;
  * @author mr.olafsson
  */
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Config implements Serializable {
 
     @XmlElement
     private String name;
+
+    @JsonIgnore
     private List<Config> parents;
 
     @XmlElement
@@ -24,6 +30,8 @@ public class Config implements Serializable {
 
     @XmlElement
     private Map<String, Value> values;
+
+    @JsonIgnore
     protected Loader loader;
 
     public Config(String name) {
@@ -37,6 +45,15 @@ public class Config implements Serializable {
         this.extensions = new LinkedHashMap<String, Config>();
         this.values = new LinkedHashMap<String, Value>();
         this.loader = loader;
+    }
+
+    /**
+     * Returns the loader that populated this config node.
+     *
+     * @return the loader that populated this config node.
+     */
+    public Loader getLoader() {
+        return loader;
     }
 
     /**

@@ -254,7 +254,7 @@ public class PropertiesLoader implements Loader {
         }
     }
 
-    protected File fileForConfig(Config config) {
+    public File fileForConfig(Config config) {
         if (filePaths.containsKey(config.path())) {
             return filePaths.get(config.path());
         } else {
