@@ -12,6 +12,21 @@ public class ConfigLogger implements ConfigVisitor {
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigLogger.class);
 
+    public enum PrivateValues {
+        PASSWORD("password");
+
+        private String privateValue;
+
+        PrivateValues(String privateValue) {
+            this.privateValue = privateValue;
+        }
+
+        @Override
+        public String toString() {
+            return privateValue;
+        }
+    }
+
     private Config config;
     private int initialLevel;
 
@@ -26,7 +41,12 @@ public class ConfigLogger implements ConfigVisitor {
     }
 
     public void value(Value value) {
-        logger.info( pad() + "  |-- " + value.label() + ( value.as_string().length()> 0 ? " = " + value.get() : "") );
+        String valueStr = value.get().toString();
+        if (isValuePrivate(value.label())) {
+            valueStr = "*************";
+        }
+
+        logger.info( pad() + "  |-- " + value.label() + ( value.as_string().length()> 0 ? " = " + valueStr : "") );
     }
 
     public void extension(Config extension) {
@@ -44,5 +64,15 @@ public class ConfigLogger implements ConfigVisitor {
         for (int i = 0; i < level - initialLevel; i++) indent.append("      ");
 
         return indent.toString();
+    }
+
+    private boolean isValuePrivate(String value) {
+        for (PrivateValues privateValue : PrivateValues.values()) {
+            if (privateValue.toString().equals(value)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
