@@ -78,4 +78,13 @@ public class ValueTest {
         Assert.assertEquals(0f, v1.as_float(), 0.00001);
         Assert.assertFalse(v1.as_boolean());
     }
+
+    @Test
+    public void testValueWithWhiteSpaceIsTrimmed() {
+        Value v1 = new Value().label("attr1").set("   myValue");
+        Assert.assertTrue(v1.as_string().equals("myValue"));
+
+        Value v2 = new Value().label("attr2").set("myValue    ");
+        Assert.assertTrue(v2.as_string().equals("myValue"));
+    }
 }
