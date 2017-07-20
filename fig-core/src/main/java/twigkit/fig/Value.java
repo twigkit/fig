@@ -81,7 +81,11 @@ public class Value<T> implements Serializable {
      */
     public String as_string() {
         if (value != null) {
-            return value.toString().trim();
+            if (!value.toString().trim().isEmpty()) {
+                return value.toString().trim();
+            } else {
+                return value.toString();
+            }
         }
         return "";
     }
