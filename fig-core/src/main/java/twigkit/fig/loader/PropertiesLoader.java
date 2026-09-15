@@ -91,6 +91,10 @@ public class PropertiesLoader implements Loader {
         };
 
         File[] files = folder.listFiles(filter);
+        if (files == null) {
+            logger.error("Unable to list files in folder (not a directory, or an I/O error occurred): {}", folder);
+            files = new File[0];
+        }
 
         Arrays.sort(files, new Comparator<File>() {
             public int compare(File file, File file1) {
@@ -123,6 +127,9 @@ public class PropertiesLoader implements Loader {
         };
 
         File[] nestedFolders = folder.listFiles(folderFilter);
+        if (nestedFolders == null) {
+            nestedFolders = new File[0];
+        }
         for (File nestedFolder : nestedFolders) {
             readFolder(fig, nestedFolder);
         }

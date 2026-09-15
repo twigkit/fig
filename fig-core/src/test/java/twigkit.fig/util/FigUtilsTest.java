@@ -1,5 +1,6 @@
 package twigkit.fig.util;
 
+import org.junit.After;
 import org.junit.Test;
 import twigkit.fig.Config;
 import twigkit.fig.Fig;
@@ -13,9 +14,27 @@ import static org.junit.Assert.assertNotNull;
  */
 public class FigUtilsTest {
 
+    /**
+     * {@link Fig#getInstance(twigkit.fig.loader.Loader...)} returns a process-wide singleton
+     * keyed on the loader(s) used. {@link FigUtils#merge(Fig, Fig)} mutates its first
+     * argument in place, so merging into the singleton for "confs" here would otherwise
+     * permanently leave that shared instance with merged-in data for the rest of the test
+     * run, corrupting unrelated tests (e.g. in {@code MergedPropertiesLoaderTest}) that
+     * expect to see the pristine "confs" configuration. Reloading after each test restores
+     * the singleton to its original, unmerged state.
+     */
+    private Fig primary;
+
+    @After
+    public void restoreSharedPrimaryFig() {
+        if (primary != null) {
+            primary.reload();
+        }
+    }
+
     @Test
     public void testExistingConfigPropertiesAreLeftUnchanged() {
-        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
         String originalRoot1KeyValue = primary.find("root").value("root-1-key").as_string();
@@ -38,7 +57,7 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewPropertyValues() {
-        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
         FigUtils.merge(primary, secondary);
@@ -55,7 +74,7 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewProperties() {
-        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
         FigUtils.merge(primary, secondary);
@@ -70,7 +89,7 @@ public class FigUtilsTest {
 
     @Test
     public void testExistingConfigsAreUpdatedWithNewExtensions() {
-        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
         FigUtils.merge(primary, secondary);
@@ -81,7 +100,7 @@ public class FigUtilsTest {
 
     @Test
     public void testNewConfigsCanBeAdded() {
-        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
         FigUtils.merge(primary, secondary);
@@ -92,7 +111,7 @@ public class FigUtilsTest {
 
     @Test
     public void testChildConfigPropertyValuesCanBeUpdated() {
-        Fig primary = Fig.getInstance(new PropertiesLoader("confs"));
+        primary = Fig.getInstance(new PropertiesLoader("confs"));
         Fig secondary = Fig.getInstance(new PropertiesLoader("confs_dev"));
 
         FigUtils.merge(primary, secondary);
